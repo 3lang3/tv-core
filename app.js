@@ -9,6 +9,7 @@ var session = require('cookie-session');
 var passport = require('passport');
 var cors = require('cors');
 var mongoose = require('mongoose');
+var config = require('./config')
 
 mongoose.connect('mongodb://localhost/tv');
 
@@ -44,7 +45,7 @@ const sessOptions = {
 var LocalStrategy = require('passport-local');
 var SteamStrategy = require('passport-steam');
 const apiKey = '4B5D0297FC947A686B2B6FC6FB0E33AD';
-const host = 'http://localhost:3000/';
+const host = `${config.endHost}`;
 
 passport.serializeUser((user, done) => {
   done(null, user.authkey);
@@ -65,7 +66,7 @@ function fetchOpenDota(accountId, cb) {
 }
 
 passport.use(new SteamStrategy({
-  returnURL: `http://localhost:3000/returnSteam`,
+  returnURL: `${host}returnSteam`,
   realm: host,
   apiKey: apiKey,
   passReqToCallback: true,
