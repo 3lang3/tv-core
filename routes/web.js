@@ -10,6 +10,7 @@ var steam = require('steam');
 var steamClient = new steam.SteamClient();
 var Dota2 = new dota2.Dota2Client(steamClient, true);
 var User = require('./../schema/User');
+var config = require('../config')
 
 // CORS headers
 app.use(cors({
@@ -24,26 +25,26 @@ app.get('/loginSteam', passport.authenticate('steam', {
 app.get('/login', passport.authenticate('local', {
 	failureRedirect: '/error'
 }), (req, res) => {
-	return res.redirect(`http://localhost:8080/`);
+	return res.redirect(`${config.frontHost}`);
 })
 
 app.get('/returnSteam', passport.authenticate('steam', {
-	failureRedirect: 'http://localhost:8080/?steam=false'
+	failureRedirect: `${config.frontHost}/?steam=false`
 }), (req, res) => {
 	console.log(req.user)
-	return res.redirect(`http://localhost:8080/`);
+	return res.redirect(`${config.frontHost}`);
 })
 
 app.get('/register', passport.authenticate('local', {
 	failureRedirect: '/error'
 }), (req, res) => {
-	return res.redirect(`http://localhost:8080/`);
+	return res.redirect(`${config.frontHost}`);
 })
 
 app.route('/logout').get((req, res) => {
 	req.logout();
 	req.session = null;
-	return res.redirect(`http://localhost:8080/`);
+	return res.redirect(`${config.frontHost}`);
 });
 
 module.exports = app;
