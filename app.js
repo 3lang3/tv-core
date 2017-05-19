@@ -37,14 +37,14 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 const sessOptions = {
-  domain: 'localhost',
+  domain: `${config.Host}`,
   maxAge: 52 * 7 * 24 * 60 * 60 * 1000,
   secret: 'testsecretvalue',
 };
 
 var LocalStrategy = require('passport-local');
 var SteamStrategy = require('passport-steam');
-const apiKey = '4B5D0297FC947A686B2B6FC6FB0E33AD';
+const apiKey = 'E0D3B44CFEA428B96F97616D00874255';
 const host = `${config.endHost}`;
 
 passport.serializeUser((user, done) => {
