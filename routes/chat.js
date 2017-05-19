@@ -10,11 +10,11 @@ io.on('connection', function (socket) {
   socket.emit('news', { hello: 'world' });
   socket.on('message:send', function (data) {
     console.log(data);
-    socket.emit('message:receive', data)
+    io.emit('message:receive', data)
   });
   socket.on('message:send:emoji', function (data) {
   	data.type = 'emoji';
-    socket.emit('message:receive', data)
+    io.emit('message:receive', data)
   });
 });
 
