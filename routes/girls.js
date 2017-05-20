@@ -8,9 +8,9 @@ var cheerio = require('cheerio');
 var viewLimit = 1000;
 var platforms = [
 	{name: 'douyu', href: 'http://www.douyu.com/directory/game/yz'},
-  {name: 'douyuvideo', href: 'https://v.douyu.com/video/video/listData?page=1&cate1Id=3&cate2Id=0&action=num'},
-  {name: 'douyuvideo', href: 'https://v.douyu.com/video/video/listData?page=1&cate1Id=25&cate2Id=0&action=num'},
-  {name: 'douyuvideo', href: 'https://v.douyu.com/video/video/listData?page=1&cate1Id=24&cate2Id=0&action=num'},
+  {name: 'douyuvideo', href: 'https://v.douyu.com/video/video/listData?page=1&cate1Id=3&cate2Id=18&action=num'},
+  {name: 'douyuvideo', href: 'https://v.douyu.com/video/video/listData?page=1&cate1Id=3&cate2Id=25&action=num'},
+  {name: 'douyuvideo', href: 'https://v.douyu.com/video/video/listData?page=1&cate1Id=3&cate2Id=24&action=num'},
 	{name: 'huomao', href: 'http://www.huomao.com/channels/channel.json?page=1&page_size=120&game_url_rule=ylxx'},
 	{name: 'afreecatv', href: `http://sch.afreecatv.com/api.php?nCateNo=00080000&m=vodSearch&v=1.0&szOrder=view_cnt&szFileType=ALL&szTerm=1week&nListCnt=40&c=UTF-8&w=webk&l=def&bAdultFlag=Y`},
 ];
