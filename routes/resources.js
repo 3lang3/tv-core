@@ -13,6 +13,7 @@ var platforms = [
   {name: 'douyu', href: 'http://www.douyu.com/directory/game/'},
 	{name: 'huomao', href: 'http://www.huomao.com/channels/channel.json?page=1&page_size=120&game_url_rule='},
   {name: 'twitch', href: `https://api.twitch.tv/kraken/streams?limit=60&client_id=${twitchKey}&game=`},
+  {name: 'huya', href: `http://www.huya.com/cache.php?m=LiveList&do=getLiveListByPage&gameId=`},
 ];
 
 function fetchEnginer(param, obj, callback) {
@@ -45,6 +46,9 @@ function switchParse(results, cb) {
 
 			case 'twitch':
 				return datas.push(twitchParse(results[index], cb))
+
+      case 'huya':
+        return datas.push(huyaParse(results[index], cb))
 
 			default:
 				return [];
@@ -86,9 +90,6 @@ function preFixUrl(platform, param) {
     if(param == 'hearthstone') {
       return `${platform.href}How`
     }
-    if(param == 'hearthstone') {
-      return `${platform.href}How`
-    }
     if(param == 'all') {
       return `http://www.douyu.com/directory/all`
     }
@@ -103,6 +104,30 @@ function preFixUrl(platform, param) {
     }
     if(param == 'tvgame') {
       return `${platform.href}zhuji`
+    }
+  }
+
+  if(platform.name == 'huya') {
+    if(param == 'dota2') {
+      return `${platform.href}7`
+    }
+    if(param == 'csgo') {
+      return `${platform.href}862`
+    }
+    if(param == 'tvgame') {
+      return `${platform.href}1964`
+    }
+    if(param == 'hearthstone') {
+      return `${platform.href}393`
+    }
+    if(param == 'lol') {
+      return `${platform.href}1`
+    }
+    if(param == 'starcraft') {
+      return `${platform.href}5`
+    }
+    if(param == 'all') {
+      return `${platform.href}0`
     }
   }
 
@@ -244,6 +269,37 @@ function luozhuParse(data, cb) {
     }
     rooms.push(room);
   })
+  return rooms;
+}
+
+function huyaParse(datas, cb) {
+  var data;
+  try{
+    data = JSON.parse(datas.text);
+  }catch(e){
+    return [];
+  }
+  if(data.status !== 200) return [];
+  var room, rooms = [];
+  _.each(data.data.datas, (el, index) => {
+    var _view = el.totalCount;
+    if(_view < 100) return;
+    var _live = true;
+
+    room = {
+      roomId: el.privateHost,
+      type: el.gameFullName,
+      title: el.roomName,
+      viewNumber: parseFloat(_view),
+      view: _view,
+      platform: 'huya',
+      live: _live,
+      anchor: el.nick,
+      cover: el.screenshot,
+    }
+    rooms.push(room);
+  })
+
   return rooms;
 }
 

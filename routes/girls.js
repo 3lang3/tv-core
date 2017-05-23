@@ -11,7 +11,8 @@ var platforms = [
   {name: 'douyuvideo', href: 'https://v.douyu.com/video/video/listData?page=1&cate1Id=3&cate2Id=18&action=num'},
   {name: 'douyuvideo', href: 'https://v.douyu.com/video/video/listData?page=1&cate1Id=3&cate2Id=25&action=num'},
   {name: 'douyuvideo', href: 'https://v.douyu.com/video/video/listData?page=1&cate1Id=3&cate2Id=24&action=num'},
-	{name: 'huomao', href: 'http://www.huomao.com/channels/channel.json?page=1&page_size=120&game_url_rule=ylxx'},
+  {name: 'huomao', href: 'http://www.huomao.com/channels/channel.json?page=1&page_size=120&game_url_rule=ylxx'},
+	{name: 'huya', href: `http://www.huya.com/cache.php?m=LiveList&do=getLiveListByPage&gameId=1663`},
 	{name: 'afreecatv', href: `http://sch.afreecatv.com/api.php?nCateNo=00080000&m=vodSearch&v=1.0&szOrder=view_cnt&szFileType=ALL&szTerm=1week&nListCnt=40&c=UTF-8&w=webk&l=def&bAdultFlag=Y`},
 ];
 
@@ -47,6 +48,9 @@ function switchParse(results, cb) {
 
       case 'afreecatv':
         return datas.push(afreecatvParse(results[index], cb))
+
+      case 'huya':
+        return datas.push(huyaParse(results[index], cb))
 
 			default:
 				return [];
@@ -213,4 +217,34 @@ function afreecatvParse(datas, cb) {
   return rooms;
 }
 
+function huyaParse(datas, cb) {
+  var data;
+  try{
+    data = JSON.parse(datas.text);
+  }catch(e){
+    return [];
+  }
+  if(data.status !== 200) return [];
+  var room, rooms = [];
+  _.each(data.data.datas, (el, index) => {
+    var _view = el.totalCount;
+    if(_view < 2000) return;
+    var _live = true;
+
+    room = {
+      roomId: el.privateHost,
+      type: el.gameFullName,
+      title: el.roomName,
+      viewNumber: parseFloat(_view),
+      view: _view,
+      platform: 'huya',
+      live: _live,
+      anchor: el.nick,
+      cover: el.screenshot,
+    }
+    rooms.push(room);
+  })
+
+  return rooms;
+}
 module.exports = girlSFetchEnginer;

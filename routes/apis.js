@@ -68,6 +68,20 @@ router.use('/invite/:code', (req, res, next) => {
   }
 })
 
+router.get('/search/:keyword', (req, res, next) => {
+  let keyword = req.params.keyword.toLowerCase() || null;
+  let results = [], result = [] ;
+  result = _.each(fetchResultData, (platform, key) => {
+    result = _.filter( platform, item => {
+      return JSON.stringify(item).toLowerCase().indexOf(keyword) > -1;
+    })
+    results.push(result);
+  })
+
+  res.json(_.flatten(results, true));
+
+})
+
 /* GET home page. */
 router.get('/categorys/:name', (req, res, next) => {
   let params = req.params.name || 'all';
