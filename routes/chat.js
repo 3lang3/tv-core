@@ -16,6 +16,11 @@ io.on('connection', function (socket) {
   	data.type = 'emoji';
     io.emit('message:receive', data)
   });
+
+  socket.on('message:send:screen', function (data) {
+    data.type = 'screen';
+    io.emit('message:receive', data)
+  });
 });
 
 server.listen(3001)

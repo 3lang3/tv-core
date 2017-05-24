@@ -14,7 +14,7 @@ var steamClient = new steam.SteamClient();
 var Dota2 = new dota2.Dota2Client(steamClient, true);
 var User = require('./../schema/User');
 var crypto = require('crypto');
-
+var config = require('../config');
 var resourceEnginer = require('./resources');
 var girlSFetchEnginer = require('./girls');
 
@@ -43,7 +43,11 @@ function checkRegister(req, res, next){
     console.log(doc, authkey)
     if(err) return  res.json('error');
     if(doc) {
-      return res.json(doc);
+      return res.json({
+        status: false,
+        user: doc,
+        version: config.version,
+      })
     }else {
       next()
     }
@@ -55,7 +59,11 @@ router.use('/metadata', checkRegister, (req, res, next) => {
   if(accountId) {
 
     }else {
-      res.json({status: false})
+      res.json({
+        status: false,
+        user: false,
+        version: config.version,
+      })
     }
 })
 
@@ -72,13 +80,14 @@ router.get('/search/:keyword', (req, res, next) => {
   let keyword = req.params.keyword.toLowerCase() || null;
   let results = [], result = [] ;
   result = _.each(fetchResultData, (platform, key) => {
-    result = _.filter( platform, item => {
-      return JSON.stringify(item).toLowerCase().indexOf(keyword) > -1;
+    result = _.filter( platform, (item, keys) => {
+      return  JSON.stringify(item.title).toLowerCase().indexOf(keyword) > -1 || JSON.stringify(item.anchor).toLowerCase().indexOf(keyword) > -1;
     })
     results.push(result);
   })
 
-  res.json(_.flatten(results, true));
+  let datas = _.flatten(results, true)
+  res.json(_.uniqBy(datas, 'anchor'));
 
 })
 
