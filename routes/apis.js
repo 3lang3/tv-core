@@ -44,7 +44,7 @@ function checkRegister(req, res, next){
     if(err) return  res.json('error');
     if(doc) {
       return res.json({
-        status: false,
+        status: true,
         user: doc,
         version: config.version,
       })
