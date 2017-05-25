@@ -14,9 +14,9 @@ var platforms = [
 	{name: 'huomao', href: 'http://www.huomao.com/channels/channel.json?page=1&page_size=120&game_url_rule='},
   {name: 'twitch', href: `https://api.twitch.tv/kraken/streams?limit=60&client_id=${twitchKey}&game=`},
   {name: 'huya', href: `http://www.huya.com/cache.php?m=LiveList&do=getLiveListByPage&gameId=`},
-  
+  {name: 'bilibili', href: `http://api.live.bilibili.com/area/liveList?order=online&area=`},
 ];
-
+// http://api.live.bilibili.com/area/liveList?area=all&order=online
 // http://search.bilibili.com/ajax_api/live?keyword=%E7%82%89%E7%9F%B3&type=all&order=online&coverType=cover
 // {name: 'bilibili', href: `http://search.bilibili.com/live?type=all&keyword=`},
 
@@ -53,6 +53,9 @@ function switchParse(results, cb) {
 
       case 'huya':
         return datas.push(huyaParse(results[index], cb))
+
+      case 'bilibili':
+        return datas.push(biliParse(results[index], cb))
 
 			default:
 				return [];
@@ -138,18 +141,10 @@ function preFixUrl(platform, param) {
   if(platform.name == 'bilibili') {
     if(param == 'tvgame') {
       return `${platform.href}single`
-    }
-    if(param == 'hearthstone') {
-      return ``
-    }
-    if(param == 'lol') {
-      return ``
-    }
-    if(param == 'starcraft') {
-      return ``
-    }
-    if(param == 'all') {
+    }else if(param == 'all') {
       return `${platform.href}home`
+    }else {
+      return ``;
     }
   }
 
@@ -319,6 +314,37 @@ function huyaParse(datas, cb) {
       live: _live,
       anchor: el.nick,
       cover: el.screenshot,
+    }
+    rooms.push(room);
+  })
+
+  return rooms;
+}
+
+function biliParse(datas, cb) {
+  var data;
+  try{
+    data = JSON.parse(datas.text);
+  }catch(e){
+    return [];
+  }
+  if(data.data.length == 0 ) return [];
+  var room, rooms = [];
+  _.each(data.data, (el, index) => {
+    var _view = el.online;
+    //if(_view < 100) return;
+    var _live = true;
+
+    room = {
+      roomId: el.roomid,
+      type: el.areaName,
+      title: el.title,
+      viewNumber: parseFloat(_view),
+      view: _view,
+      platform: 'bilibili',
+      live: _live,
+      anchor: el.uname,
+      cover: el.cover,
     }
     rooms.push(room);
   })
