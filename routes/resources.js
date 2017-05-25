@@ -14,7 +14,11 @@ var platforms = [
 	{name: 'huomao', href: 'http://www.huomao.com/channels/channel.json?page=1&page_size=120&game_url_rule='},
   {name: 'twitch', href: `https://api.twitch.tv/kraken/streams?limit=60&client_id=${twitchKey}&game=`},
   {name: 'huya', href: `http://www.huya.com/cache.php?m=LiveList&do=getLiveListByPage&gameId=`},
+  
 ];
+
+// http://search.bilibili.com/ajax_api/live?keyword=%E7%82%89%E7%9F%B3&type=all&order=online&coverType=cover
+// {name: 'bilibili', href: `http://search.bilibili.com/live?type=all&keyword=`},
 
 function fetchEnginer(param, obj, callback) {
 	var tasks = _.map(platforms, platform => {
@@ -131,11 +135,30 @@ function preFixUrl(platform, param) {
     }
   }
 
+  if(platform.name == 'bilibili') {
+    if(param == 'tvgame') {
+      return `${platform.href}single`
+    }
+    if(param == 'hearthstone') {
+      return ``
+    }
+    if(param == 'lol') {
+      return ``
+    }
+    if(param == 'starcraft') {
+      return ``
+    }
+    if(param == 'all') {
+      return `${platform.href}home`
+    }
+  }
+
 	return `${platform.href}${param}`;
 }
 
 function fetchPlatform(url, cb) {
   console.log('fetch: ', url)
+  if(urr == '') return cb(null, null);
   superagent
     .get(url)
     .set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36')
