@@ -142,7 +142,7 @@ function preFixUrl(platform, param) {
     if(param == 'tvgame') {
       return `${platform.href}single`
     }else if(param == 'all') {
-      return `${platform.href}home`
+      return `${platform.href}all`
     }else {
       return ``;
     }
