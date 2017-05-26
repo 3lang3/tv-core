@@ -153,7 +153,7 @@ function preFixUrl(platform, param) {
 
 function fetchPlatform(url, cb) {
   console.log('fetch: ', url)
-  if(urr == '') return cb(null, null);
+  if(url == '') return cb(null, null);
   superagent
     .get(url)
     .set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36')
