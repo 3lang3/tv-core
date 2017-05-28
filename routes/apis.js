@@ -57,14 +57,18 @@ function checkRegister(req, res, next){
 router.use('/metadata', checkRegister, (req, res, next) => {
   var accountId = req.session.passport ? Dota2.ToAccountID(req.session.passport.user) : null;
   if(accountId) {
-
-    }else {
-      res.json({
-        status: false,
-        user: false,
-        version: config.version,
-      })
-    }
+    res.json({
+      status: false,
+      user: false,
+      version: config.version,
+   })
+  }else {
+    res.json({
+      status: false,
+      user: false,
+      version: config.version,
+   })
+  }
 })
 
 router.use('/invite/:code', (req, res, next) => {

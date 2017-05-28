@@ -152,7 +152,7 @@ function preFixUrl(platform, param) {
 }
 
 function fetchPlatform(url, cb) {
-  console.log('fetch: ', url)
+  //console.log('fetch: ', url)
   if(url == '') return cb(null, null);
   superagent
     .get(url)

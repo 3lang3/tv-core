@@ -148,31 +148,57 @@ passport.use(new LocalStrategy({
   session: false,
   passReqToCallback: true,
 },(req, email, password, done) => {
-  User.findOne({ email: req.query.email }, function (err, user) {
-    if (err) { 
-      return done(err); 
-    }
-    if (!user) {
-      var email = req.query.email,
+
+  var email = req.query.email,
       nickname = req.query.nickname,
       md5 = crypto.createHash('md5'),
-      password = md5.update(req.query.password).digest('base64'),
-      obj = {
-        email: email,
-        nickname: nickname,
-        password: password,
-        authkey: email,
+      password = md5.update(req.query.password).digest('base64');
+    
+  // rigister
+  console.log(nickname)
+  if(nickname) {
+    console.log('registeiung')
+     User.findOne({ email: email }, function (err, user) {
+      if (err) { 
+        return done(err); 
       }
+      //
+      if (!user) {
+        var obj = {
+          email: email,
+          nickname: nickname,
+          password: password,
+          authkey: email,
+        }
 
-      var newUser = new User(obj)
+        var newUser = new User(obj)
 
-      newUser.save(err => {
-        return done(null, obj);
-      });
-    }
-    //if (!user.verifyPassword(password)) { return done(null, false); }
-    //return done(null, user);
-  });
+        newUser.save(err => {
+          return done(null, obj);
+        });
+      }else {
+        return done(null, user);
+      }
+    });
+  }else {
+    console.log('login')
+    // login
+    User.findOne({ email: email, password: password }, function (err, user) {
+      if (err) { 
+        console.log('login err', err)
+        return done(err); 
+      }
+      //
+      if (!user) {
+        console.log('not right password')
+        return done(null, false);
+      }else {
+        return done(null, user);
+      }
+      //if (!user.verifyPassword(password)) { return done(null, false); }
+      //return done(null, user);
+    });
+  }
 
 }));
 

@@ -23,7 +23,7 @@ app.get('/loginSteam', passport.authenticate('steam', {
 }))
 
 app.get('/login', passport.authenticate('local', {
-	failureRedirect: '/error'
+	failureRedirect: `${config.frontHost}?mode=login&status=false&type=1`
 }), (req, res) => {
 	return res.redirect(`${config.frontHost}`);
 })
@@ -31,7 +31,6 @@ app.get('/login', passport.authenticate('local', {
 app.get('/returnSteam', passport.authenticate('steam', {
 	failureRedirect: `${config.frontHost}?steam=false`
 }), (req, res) => {
-	console.log(req.user)
 	return res.redirect(`${config.frontHost}`);
 })
 
