@@ -71,6 +71,24 @@ router.use('/metadata', checkRegister, (req, res, next) => {
   }
 })
 
+router.use('/online', (req, res, next) => {
+  let favoriteList = JSON.parse(req.body.json);
+  let results = [];
+
+
+  _.each(fetchResultData, (platform, key) => {
+    _.each(platform, (item, keys) => {
+      _.each(favoriteList, (favorite, index) => {
+       if(favorite.anchor == item.anchor && favorite.roomId == item.roomId) {
+         results.push(favorite)
+       }
+     })
+    })
+  })
+  console.log(favoriteList, results)
+  res.json(_.uniqBy(results, 'anchor'));
+})
+
 router.use('/invite/:code', (req, res, next) => {
   let inviteCode = req.params.code || null;
   if(inviteCode == testInviteCode) {
