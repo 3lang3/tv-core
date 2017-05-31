@@ -85,8 +85,10 @@ router.use('/online', (req, res, next) => {
      })
     })
   })
-  console.log(favoriteList, results)
-  res.json(_.uniqBy(results, 'anchor'));
+  setTimeout(() => {
+    res.json(_.uniqBy(results, 'anchor'));
+  }, 1000)
+  
 })
 
 router.use('/invite/:code', (req, res, next) => {
@@ -109,7 +111,10 @@ router.get('/search/:keyword', (req, res, next) => {
   })
 
   let datas = _.flatten(results, true)
-  res.json(_.uniqBy(datas, 'anchor'));
+
+  setTimeout(() => {
+    res.json(_.uniqBy(datas, 'anchor'));
+  }, 1000)
 
 })
 
