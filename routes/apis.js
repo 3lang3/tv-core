@@ -27,6 +27,7 @@ var fetchResultData = {
   girls: {},
   tvgame: {},
   starcraft: {},
+  overwatch: {},
   hearthstone: {},
   all: {},
 }
@@ -138,6 +139,7 @@ function autoFetch() {
     'tvgame',
     'starcraft',
     'hearthstone',
+    'overwatch',
     'all'
   ]
 

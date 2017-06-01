@@ -76,6 +76,9 @@ function preFixUrl(platform, param) {
     if(param == 'lol') {
       return `${platform.href}League+of+Legends`
     }
+    if(param == 'overwatch') {
+      return `${platform.href}Overwatch`
+    }
     if(param == 'hearthstone') {
       return `${platform.href}Hearthstone`
     }
@@ -106,6 +109,9 @@ function preFixUrl(platform, param) {
     if(param == 'csgo') {
       return `${platform.href}CSGO`
     }
+    if(param == 'overwatch') {
+      return `${platform.href}Overwatch`
+    }
     if(param == 'hearthstone') {
       return `${platform.href}ls`
     }
@@ -126,6 +132,9 @@ function preFixUrl(platform, param) {
     }
     if(param == 'hearthstone') {
       return `${platform.href}393`
+    }
+    if(param == 'overwatch') {
+      return `${platform.href}2174`
     }
     if(param == 'lol') {
       return `${platform.href}1`
