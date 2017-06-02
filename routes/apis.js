@@ -15,33 +15,17 @@ var Dota2 = new dota2.Dota2Client(steamClient, true);
 var User = require('./../schema/User');
 var crypto = require('crypto');
 var config = require('../config');
+var platformConfig = require('../config/platform');
 var resourceEnginer = require('./resources');
 var girlSFetchEnginer = require('./girls');
 
-const testInviteCode = 'testcode';
-
-var fetchResultData = {
-  dota2: {},
-  lol: {},
-  csgo: {},
-  girls: {},
-  tvgame: {},
-  starcraft: {},
-  overwatch: {},
-  hearthstone: {},
-  all: {},
-}
+var fetchResultData = {}
 
 function checkRegister(req, res, next){
   var authkey = req.session.passport ? req.session.passport.user : null;
 
-  // if(authkey && authkey.indexOf('steam') > -1 ) {
-  //   authkey = Dota2.ToAccountID(authkey.split('steam')[1]);
-  // }
-
   if(!authkey) return next();
   User.findOne({authkey: authkey }, (err, doc) => {
-    console.log(doc, authkey)
     if(err) return  res.json('error');
     if(doc) {
       return res.json({
@@ -55,23 +39,16 @@ function checkRegister(req, res, next){
   })
 }
 
+// user metadata
 router.use('/metadata', checkRegister, (req, res, next) => {
-  var accountId = req.session.passport ? Dota2.ToAccountID(req.session.passport.user) : null;
-  if(accountId) {
     res.json({
       status: false,
       user: false,
       version: config.version,
    })
-  }else {
-    res.json({
-      status: false,
-      user: false,
-      version: config.version,
-   })
-  }
 })
 
+// user favorite list online item
 router.use('/online', (req, res, next) => {
   let favoriteList = JSON.parse(req.body.json);
   let results = [];
@@ -92,15 +69,17 @@ router.use('/online', (req, res, next) => {
   
 })
 
+// invite auth
 router.use('/invite/:code', (req, res, next) => {
   let inviteCode = req.params.code || null;
-  if(inviteCode == testInviteCode) {
+  if(inviteCode == `${config.inviteCode}`) {
     res.json({status: true})
   }else {
     res.json({status: false})
   }
 })
 
+// search (item.title && item.anchor)
 router.get('/search/:keyword', (req, res, next) => {
   let keyword = req.params.keyword.toLowerCase() || null;
   let results = [], result = [] ;
@@ -119,7 +98,7 @@ router.get('/search/:keyword', (req, res, next) => {
 
 })
 
-/* GET home page. */
+// categorys apis
 router.get('/categorys/:name', (req, res, next) => {
   let params = req.params.name || 'all';
   _.each(fetchResultData, (platform, key) => {
@@ -129,19 +108,12 @@ router.get('/categorys/:name', (req, res, next) => {
   })
 });
 
+
 autoFetch();
 function autoFetch() {
-  let params = [
-    'dota2',
-    'lol',
-    'csgo',
-    'girls',
-    'tvgame',
-    'starcraft',
-    'hearthstone',
-    'overwatch',
-    'all'
-  ]
+  let params = [];
+
+  platformConfig.gameType.map( name => params.push(name) )
 
   async.forever(next => {
     fn(() => setTimeout(() => {
@@ -153,19 +125,15 @@ function autoFetch() {
 
   function fn(cb) {
     async.eachLimit(params, 1 , (name, callback) => {
-        _.each(fetchResultData, (platform, key) => {
-          if(name == key && name) {
-            if(name == 'girls') {
-              return girlSFetchEnginer(fetchResultData, callback)
-            }
-            return resourceEnginer(name, fetchResultData, callback)
-          }
-        })
+        if(name == 'girls') {
+          return girlSFetchEnginer(fetchResultData, callback)
+        }
+            
+        return resourceEnginer(name, fetchResultData, callback)
     })
     return cb()
   }
 
-  
 }
 
 module.exports = router;

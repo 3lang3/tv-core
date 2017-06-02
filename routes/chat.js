@@ -7,11 +7,11 @@ var io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
   console.log('a user connected!');
-  socket.emit('news', { hello: 'world' });
+  
   socket.on('message:send', function (data) {
-    console.log(data);
     io.emit('message:receive', data)
   });
+
   socket.on('message:send:emoji', function (data) {
   	data.type = 'emoji';
     io.emit('message:receive', data)
