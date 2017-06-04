@@ -142,7 +142,7 @@ function fetchPlatform(url, cb) {
     .timeout(5000)
     .end((err, data) => {
       if (err) {
-        console.log(err, url)
+        //console.log(err, url)
         cb(null, null);
       } else {
         cb(null, data);

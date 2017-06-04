@@ -9,6 +9,7 @@ module.exports = {
     twitchKey: 'b126oamqxmzf2rbuh2smmoumpgscjf',
     sessionMaxAge: 52 * 7 * 24 * 60 * 60 * 1000,
     sessionSecret: 'testsecretvalue',
+    ChatPort: 3001,
     InviteCode: 'testcode',
     version: '1.1.5',
 }
