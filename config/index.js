@@ -1,9 +1,12 @@
+let domain = require('./domain');
+
+
 module.exports = {
-    frontHost: 'http://localhost:8080/',
-    endHost: 'http://localhost:3000/',
+    frontHost: `http://${domain}:8080/`,
+    endHost: `http://${domain}:3000/`,
     Host: 'localhost',
     openDotaApiHost: 'https://api.opendota.com/api/',
-    mongodbUri: '//localhost/',
+    mongodbUri: `//${domain}/`,
     mongodbName: 'tv',
     steamKey: 'E0D3B44CFEA428B96F97616D00874255',
     twitchKey: 'b126oamqxmzf2rbuh2smmoumpgscjf',

@@ -16,11 +16,10 @@ var onlineCount = 0;
 
 io.on('connection', function (socket) {
   console.log('a user connected!');
-  //console.log(socket);
 
   socket.on('login', function (data) {
-
-    var uid = socket.handshake.headers.cookie.split('io=')[1];
+		//console.log(socket)
+    var uid = socket.id
     socket.uid = uid;
     socket.user = data;
 
