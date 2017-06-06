@@ -98,6 +98,19 @@ router.get('/search/:keyword', (req, res, next) => {
 
 })
 
+// recommend apis
+router.get('/recommend', (req, res, next) => {
+  let results = {};
+  let data = _.cloneDeep(fetchResultData);
+
+  _.each(data, (platform, key) => {
+    if(key == 'all') return;
+    results[key] = platform.splice(0, 8)
+  })
+
+  res.json(results)
+});
+
 // categorys apis
 router.get('/categorys/:name', (req, res, next) => {
   let params = req.params.name || 'all';
