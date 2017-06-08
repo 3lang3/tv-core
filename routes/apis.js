@@ -108,7 +108,9 @@ router.get('/recommend', (req, res, next) => {
     results[key] = platform.splice(0, 8)
   })
 
-  res.json(results)
+  setTimeout(function(){
+    res.json(results)
+  }, 1000)
 });
 
 // categorys apis
