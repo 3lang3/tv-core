@@ -14,5 +14,5 @@ module.exports = {
     sessionSecret: 'testsecretvalue',
     ChatPort: 3001,
     InviteCode: 'testcode',
-    version: '1.1.5',
+    version: '2.0.0',
 }
