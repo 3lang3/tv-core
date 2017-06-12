@@ -34,6 +34,16 @@ module.exports = {
             minView: 100,
         },
         {
+            name: 'quanmin',
+            href: `http://www.quanmin.tv/game/`,
+            minView: 100,
+        },
+        {
+            name: 'zhanqi',
+            href: `https://www.zhanqi.tv/api/static/v2.1/game/live/`,
+            minView: 100,
+        },
+        {
             name: 'bilibili',
             href: `http://api.live.bilibili.com/area/liveList?order=online&area=`,
             minView: 0,

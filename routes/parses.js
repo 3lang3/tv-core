@@ -220,6 +220,7 @@ function bilibiliParse(datas, cb) {
 
 function afreecatvParse(datas, cb) {
   var data;
+  
   try{
     data = JSON.parse(datas.text);
   }catch(e){
@@ -256,6 +257,77 @@ function afreecatvParse(datas, cb) {
   return rooms;
 }
 
+function quanminParse(datas, cb) {
+  var $;
+
+  try{
+    $ = cheerio.load(datas.text);
+  }catch(e){
+    return [];
+  }
+
+  var room, rooms = [];
+  if($('.list_w-videos').length > 1) {
+    var $par = $('.list_w-videos').eq(1).find('li');
+    var typeText = $('.list_w-title_wrap').eq(1).text().trim();
+  }else {
+    var $par = $('.list_w-videos li');
+    var typeText = $('.list_w-title_wrap').text().trim();
+  }
+
+  $par.each(function(index, el) {
+    var _view = $(el).find('span.common_w-card_views-num').text().trim();
+    if(_view.indexOf('万') > -1 ) _view = parseFloat(_view)*10000;
+    if(_view < 500) return;
+    var room = {
+      roomId: $(el).find('.common_w-card_href').attr('href').substr(1),
+      type: typeText,
+      title: $(el).find('.common_w-card_title').text().trim(),
+      viewNumber: parseFloat(_view),
+      view: _view,
+      platform: 'quanmin',
+      live: true,
+      anchor: $(el).find('.common_w-card_host-name').text().trim(),
+      cover: $(el).find('img.common_w-card_cover').attr('src'),
+    }
+
+    rooms.push(room)
+  });
+
+  return rooms;
+}
+
+function zhanqiParse(datas, cb) {
+  var data;
+  try{
+    data = JSON.parse(datas.text);
+  }catch(e){
+    return [];
+  }
+  if(!data.data.room.length) return [];
+  var room, rooms = [];
+  _.each(data.data.rooms, (el, index) => {
+    var _view = el.totalCount;
+    if(_view < 100) return;
+    var _live = true;
+
+    room = {
+      roomId: el.privateHost,
+      type: el.gameFullName,
+      title: el.roomName,
+      viewNumber: parseFloat(_view),
+      view: _view,
+      platform: 'huya',
+      live: _live,
+      anchor: el.nick,
+      cover: el.screenshot,
+    }
+    rooms.push(room);
+  })
+
+  return rooms;
+}
+
 
 
 exports.douyuParse = douyuParse;
@@ -266,3 +338,4 @@ exports.huyaParse = huyaParse;
 exports.bilibiliParse = bilibiliParse;
 exports.douyuvideoParse = douyuvideoParse;
 exports.afreecatvParse = afreecatvParse;
+exports.quanminParse = quanminParse;

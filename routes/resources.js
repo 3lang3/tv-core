@@ -79,6 +79,12 @@ function preFixUrl(platform, param) {
     }
   }
 
+  if(platform.name == 'quanmin') {
+    if(param == 'starcraft') {
+      return ``
+    }
+  }
+
   if(platform.name == 'huomao') {
     if(param == 'csgo') {
       return `${platform.href}CSGO`
@@ -91,6 +97,30 @@ function preFixUrl(platform, param) {
     }
     if(param == 'tvgame') {
       return `${platform.href}zhuji`
+    }
+  }
+
+  if(platform.name == 'zhanqi') {
+    if(param == 'lol') {
+      return `${platform.href}6/100/1.json`
+    }
+    if(param == 'csgo') {
+      return `${platform.href}119/100/1.json`
+    }
+    if(param == 'dota2') {
+      return `${platform.href}10/100/1.json`
+    }
+    if(param == 'overwatch') {
+      return `${platform.href}82/100/1.json`
+    }
+    if(param == 'hearthstone') {
+      return `${platform.href}9/100/1.json`
+    }
+    if(param == 'starcraft') {
+      return `${platform.href}5/100/1.json`
+    }
+    if(param == 'tvgame') {
+      return `${platform.href}49/100/1.json`
     }
   }
 
