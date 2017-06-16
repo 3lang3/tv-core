@@ -113,6 +113,21 @@ router.get('/recommend', (req, res, next) => {
   }, 1000)
 });
 
+// category api
+router.get('/categorys', (req, res, next) => {
+  let data = _.cloneDeep(platformConfig.gameType);
+
+  _.each(fetchResultData, (platform, key) => {
+    platformConfig.gameType.forEach((el, index) => {
+      if(key == el.name) {
+        data[index].count = platform.length
+      }
+    })
+  })
+  
+  res.json(data)
+})
+
 // categorys apis
 router.get('/categorys/:name', (req, res, next) => {
   let params = req.params.name || 'all';
@@ -123,12 +138,11 @@ router.get('/categorys/:name', (req, res, next) => {
   })
 });
 
-
 autoFetch();
 function autoFetch() {
   let params = [];
 
-  platformConfig.gameType.map( name => params.push(name) )
+  platformConfig.gameType.map( category => params.push(category.name) )
 
   async.forever(next => {
     fn(() => setTimeout(() => {

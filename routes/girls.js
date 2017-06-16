@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var superagent = require('superagent');
+var request = require('request');
 var async = require('async');
 var cheerio = require('cheerio');
 var parses = require('./parses');
@@ -39,7 +39,7 @@ function switchParse(results, cb) {
 
 	_.map(platforms, (platform, index) => {
 
-      return datas.push(eval(`parses.${platform.name}Parse(results[index], cb)`));
+      return datas.push(eval(`parses.${platform.name}Parse(results[index], 'girls', cb)`));
 
   })
 
@@ -47,19 +47,21 @@ function switchParse(results, cb) {
 }
 
 function fetchPlatform(url, cb) {
-  superagent
-    .get(url)
-    .set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36')
-    .timeout(5000)
-    .end((err, data) => {
-      if (err) {
-        //console.log(err, url)
-        cb(null, null);
-      } else {
-        cb(null, data);
-      }
-    })
+  if(url == '') return cb(null, null);
+
+  var options = {
+    url: url,
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'
+    }
+  };
+  request(options, (err, res, body) => {
+    if (err) {
+      //console.log(err, url)
+      cb(null, null);
+    } else {
+      cb(null, res);
+    }
+  })
 }
-
-
 module.exports = girlSFetchEnginer;

@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var superagent = require('superagent');
+var request = require('request');
 var async = require('async');
 var cheerio = require('cheerio');
 var platformConfig = require('../config/platform');
@@ -13,13 +13,19 @@ function fetchEnginer(param, obj, callback) {
 
 	var tasks = _.map(platforms, platform => {
 		var _url = preFixUrl(platform, param);
-		return (cb) => fetchPlatform(_url, cb);
+		return (cb) => fetchPlatform(_url,  cb);
 	})
 
 	async.parallel(tasks, (err, results) => {
 		var cb = null;
-		var datas = _.flatten(switchParse(results, cb), true);
-    if(datas.length == 0) return callback(null, null)
+		var datas = _.flatten(switchParse(results, param, cb), true);
+
+    if(datas.length == 0) return callback(null, null);
+
+    datas.forEach((el, index) => {
+      el.id = `${el.platform}${el.roomId}`;
+    })
+
 		var result = _.reverse(_.sortBy(datas, 'viewNumber'))
 
     obj[param] = result
@@ -27,12 +33,12 @@ function fetchEnginer(param, obj, callback) {
 	})
 }
 
-function switchParse(results, cb) {
+function switchParse(results, param, cb) {
 	var datas = [];
 
 	_.map(platforms, (platform, index) => {
 
-      return datas.push(eval(`parses.${platform.name}Parse(results[index], cb)`));
+      return datas.push(eval(`parses.${platform.name}Parse(results[index], param, cb)`));
 
   })
 
@@ -123,6 +129,7 @@ function preFixUrl(platform, param) {
       return `${platform.href}49/100/1.json`
     }
   }
+  
 
   if(platform.name == 'huya') {
     if(param == 'dota2') {
@@ -151,6 +158,33 @@ function preFixUrl(platform, param) {
     }
   }
 
+  if(platform.name == 'longzhu') {
+    if(param == 'dota2') {
+      return `${platform.href}30`
+    }
+    if(param == 'lol') {
+      return `${platform.href}4`
+    }
+    if(param == 'csgo') {
+      return `${platform.href}187`
+    }
+    if(param == 'tvgame') {
+      return `${platform.href}92`
+    }
+    if(param == 'hearthstone') {
+      return `${platform.href}29`
+    }
+    if(param == 'overwatch') {
+      return `${platform.href}113`
+    }
+    if(param == 'starcraft') {
+      return `${platform.href}6`
+    }
+    if(param == 'all') {
+      return `${platform.href}0`
+    }
+  }
+
   if(platform.name == 'bilibili') {
     if(param == 'tvgame') {
       return `${platform.href}single`
@@ -166,18 +200,21 @@ function preFixUrl(platform, param) {
 
 function fetchPlatform(url, cb) {
   if(url == '') return cb(null, null);
-  superagent
-    .get(url)
-    .set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36')
-    .timeout(5000)
-    .end((err, data) => {
-      if (err) {
-        //console.log(err, url)
-        cb(null, null);
-      } else {
-        cb(null, data);
-      }
-    })
+
+  var options = {
+    url: url,
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'
+    }
+  };
+  request(options, (err, res, body) => {
+    if (err) {
+      //console.log(err, url)
+      cb(null, null);
+    } else {
+      cb(null, res);
+    }
+  })
 }
 
 module.exports = fetchEnginer;

@@ -2,11 +2,11 @@ var cheerio = require('cheerio');
 var _ = require('lodash');
 
 
-function douyuParse(datas, cb) {
+function douyuParse(datas, param, cb) {
   var $;
 
   try{
-    $ = cheerio.load(datas.text);
+    $ = cheerio.load(datas.body);
   }catch(e){
     return [];
   }
@@ -18,7 +18,7 @@ function douyuParse(datas, cb) {
     if(_view < 600) return;
     var room = {
       roomId: $(el).data('rid'),
-      type: $(el).find('span.tag').text(),
+      type: param,
       title: $(el).find('h3').text().trim(),
       viewNumber: parseFloat(_view),
       view: $(el).find('span.dy-num').text(),
@@ -34,10 +34,10 @@ function douyuParse(datas, cb) {
   return rooms;
 }
 
-function douyuvideoParse(datas, cb) {
+function douyuvideoParse(datas, param, cb) {
   var data;
   try{
-    data = JSON.parse(datas.text);
+    data = JSON.parse(datas.body);
   }catch(e){
     return []; 
   }
@@ -52,7 +52,7 @@ function douyuvideoParse(datas, cb) {
 
     room = {
       roomId: _id,
-      type: 'girls',
+      type: param,
       title: el.title,
       viewNumber: parseFloat(_view),
       view: el.view_num,
@@ -67,14 +67,14 @@ function douyuvideoParse(datas, cb) {
   return rooms;
 }
 
-function twitchParse(datas, cb) {
+function twitchParse(datas, param, cb) {
   var data;
   try{
-    data = JSON.parse(datas.text);
+    data = JSON.parse(datas.body);
   }catch(e){
     return [];
   }
-  if(data.streams.length == 0) return [];
+  if(!data.streams) return [];
   var room, rooms = [];
   _.each(data.streams, (el, index) => {
   	var _view = el.viewers;
@@ -83,7 +83,7 @@ function twitchParse(datas, cb) {
   	if(!_live) return;
     room = {
       roomId: el.channel.name,
-      type: el.game,
+      type: param,
       title: el.channel.status,
       viewNumber: parseFloat(_view),
       view: _view,
@@ -98,10 +98,10 @@ function twitchParse(datas, cb) {
   return rooms;
 }
 
-function huomaoParse(datas, cb) {
+function huomaoParse(datas, param, cb) {
   var data;
   try{
-    data = JSON.parse(datas.text);
+    data = JSON.parse(datas.body);
   }catch(e){
     return [];
   }
@@ -121,7 +121,7 @@ function huomaoParse(datas, cb) {
   	if(el.is_live == '0') return;
     room = {
       roomId: el.room_number,
-      type: el.gameEname,
+      type: param,
       title: el.channel,
       viewNumber: parseFloat(_view),
       view: el.views,
@@ -136,45 +136,52 @@ function huomaoParse(datas, cb) {
   return rooms;
 }
 
-function luozhuParse(data, cb) {
-  var data = JSON.parse(data.text);
-  if(!data.data.items.length) return false;
+function longzhuParse(datas, param, cb) {
+  var data;
+  //console.log(datas.text)
+  try{
+    data = JSON.parse(datas.body);
+  }catch(e){
+    return [];
+  }
+  if(!data.data.items.length) return [];
   var room, rooms = [];
   _.each(data.data.items, (el, index) => {
     room = {
       roomId: el.channel.id,
-      type: el.game.name || el.game.tag,
+      type: param,
       title: el.channel.status,
+      viewNumber: parseFloat(el.viewers),
       view: el.viewers,
       platform: 'longzhu',
       live: true,
       anchor: el.channel.name,
-      cover: el.channel.avatar,
+      cover: el.preview,
     }
     rooms.push(room);
   })
   return rooms;
 }
 
-function huyaParse(datas, cb) {
+function huyaParse(datas, param, cb) {
   var data;
   try{
-    data = JSON.parse(datas.text);
+    data = JSON.parse(datas.body);
   }catch(e){
     return [];
   }
   if(data.status !== 200) return [];
   var room, rooms = [];
   _.each(data.data.datas, (el, index) => {
-    var _view = el.totalCount;
+    var _view = parseFloat(el.totalCount);
     if(_view < 100) return;
     var _live = true;
 
     room = {
       roomId: el.privateHost,
-      type: el.gameFullName,
+      type: param,
       title: el.roomName,
-      viewNumber: parseFloat(_view),
+      viewNumber: _view,
       view: _view,
       platform: 'huya',
       live: _live,
@@ -187,10 +194,10 @@ function huyaParse(datas, cb) {
   return rooms;
 }
 
-function bilibiliParse(datas, cb) {
+function bilibiliParse(datas, param, cb) {
   var data;
   try{
-    data = JSON.parse(datas.text);
+    data = JSON.parse(datas.body);
   }catch(e){
     return [];
   }
@@ -203,7 +210,7 @@ function bilibiliParse(datas, cb) {
 
     room = {
       roomId: el.roomid,
-      type: el.areaName,
+      type: param,
       title: el.title,
       viewNumber: parseFloat(_view),
       view: _view,
@@ -218,11 +225,11 @@ function bilibiliParse(datas, cb) {
   return rooms;
 }
 
-function afreecatvParse(datas, cb) {
+function afreecatvParse(datas, param, cb) {
   var data;
   
   try{
-    data = JSON.parse(datas.text);
+    data = JSON.parse(datas.body);
   }catch(e){
     return [];
   }
@@ -242,7 +249,7 @@ function afreecatvParse(datas, cb) {
         nBbsNo: el.bbs_no,
         szBjId: el.user_id,
       },
-      type: 'girls',
+      type: param,
       title: el.b_title,
       viewNumber: parseFloat(_view),
       view: _view,
@@ -257,11 +264,11 @@ function afreecatvParse(datas, cb) {
   return rooms;
 }
 
-function quanminParse(datas, cb) {
+function quanminParse(datas, param, cb) {
   var $;
 
   try{
-    $ = cheerio.load(datas.text);
+    $ = cheerio.load(datas.body);
   }catch(e){
     return [];
   }
@@ -269,10 +276,8 @@ function quanminParse(datas, cb) {
   var room, rooms = [];
   if($('.list_w-videos').length > 1) {
     var $par = $('.list_w-videos').eq(1).find('li');
-    var typeText = $('.list_w-title_wrap').eq(1).text().trim();
   }else {
     var $par = $('.list_w-videos li');
-    var typeText = $('.list_w-title_wrap').text().trim();
   }
 
   $par.each(function(index, el) {
@@ -281,7 +286,7 @@ function quanminParse(datas, cb) {
     if(_view < 500) return;
     var room = {
       roomId: $(el).find('.common_w-card_href').attr('href').substr(1),
-      type: typeText,
+      type: param,
       title: $(el).find('.common_w-card_title').text().trim(),
       viewNumber: parseFloat(_view),
       view: _view,
@@ -297,30 +302,31 @@ function quanminParse(datas, cb) {
   return rooms;
 }
 
-function zhanqiParse(datas, cb) {
+function zhanqiParse(datas, param, cb) {
   var data;
+
   try{
-    data = JSON.parse(datas.text);
+    data = JSON.parse(datas.body);
   }catch(e){
     return [];
   }
-  if(!data.data.room.length) return [];
+  if(!data.data.rooms.length) return [];
   var room, rooms = [];
   _.each(data.data.rooms, (el, index) => {
-    var _view = el.totalCount;
+    var _view = el.online;
     if(_view < 100) return;
     var _live = true;
 
     room = {
-      roomId: el.privateHost,
-      type: el.gameFullName,
-      title: el.roomName,
+      roomId: el.uid,
+      type: param,
+      title: el.title,
       viewNumber: parseFloat(_view),
       view: _view,
-      platform: 'huya',
+      platform: 'zhanqi',
       live: _live,
-      anchor: el.nick,
-      cover: el.screenshot,
+      anchor: el.nickname,
+      cover: el.bpic,
     }
     rooms.push(room);
   })
@@ -333,9 +339,10 @@ function zhanqiParse(datas, cb) {
 exports.douyuParse = douyuParse;
 exports.twitchParse = twitchParse;
 exports.huomaoParse = huomaoParse;
-exports.luozhuParse = luozhuParse;
+exports.longzhuParse = longzhuParse;
 exports.huyaParse = huyaParse;
 exports.bilibiliParse = bilibiliParse;
 exports.douyuvideoParse = douyuvideoParse;
 exports.afreecatvParse = afreecatvParse;
 exports.quanminParse = quanminParse;
+exports.zhanqiParse = zhanqiParse;

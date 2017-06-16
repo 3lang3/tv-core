@@ -25,6 +25,7 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "passport-steam": "^1.0.8",
+    "request": "^2.81.0",
     "serve-favicon": "~2.3.0",
     "socket.io": "^1.7.3",
     "steam": "^1.4.0",
