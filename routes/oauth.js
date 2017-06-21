@@ -54,11 +54,12 @@ function fetchOpenDota(accountId, cb) {
 
 // steam oauth 
 passport.use(new SteamStrategy({
-  returnURL: `${host}returnSteam`,
+  returnURL: `${config.endHost}returnSteam`,
   realm: `${config.endHost}`,
   apiKey: `${config.steamKey}`,
   passReqToCallback: true,
 }, (req, identifier, profile, done) => {
+  console.log('enter')
 
   const sessionUser = req.session.passport ? req.session.passport.user : null;
   const accountId = Dota2.ToAccountID(profile.id);

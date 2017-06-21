@@ -138,6 +138,18 @@ router.get('/categorys/:name', (req, res, next) => {
   })
 });
 
+// random category apis
+router.get('/random', (req, res, next) => {
+  let result = [];
+  _.each(fetchResultData, (platform, key) => {
+    if(key != 'all' || key != 'girls') {
+      result.push(_.sample(platform, 1));
+    }
+  })
+
+  return setTimeout(() => res.json(result), 500)
+});
+
 autoFetch();
 function autoFetch() {
   let params = [];

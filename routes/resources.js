@@ -80,6 +80,9 @@ function preFixUrl(platform, param) {
     if(param == 'hearthstone') {
       return `${platform.href}How`
     }
+    if(param == 'hok') {
+      return `${platform.href}wzry`
+    }
     if(param == 'all') {
       return `http://www.douyu.com/directory/all`
     }
@@ -88,6 +91,9 @@ function preFixUrl(platform, param) {
   if(platform.name == 'quanmin') {
     if(param == 'starcraft') {
       return ``
+    }
+    if(param == 'hok') {
+      return `${platform.href}wangzhe`
     }
   }
 
@@ -103,6 +109,9 @@ function preFixUrl(platform, param) {
     }
     if(param == 'tvgame') {
       return `${platform.href}zhuji`
+    }
+    if(param == 'tvgame') {
+      return `${platform.href}all&labelid=93`
     }
   }
 
@@ -128,6 +137,9 @@ function preFixUrl(platform, param) {
     if(param == 'tvgame') {
       return `${platform.href}49/100/1.json`
     }
+    if(param == 'hok') {
+      return `${platform.href}115/100/1.json`
+    }
   }
   
 
@@ -152,6 +164,9 @@ function preFixUrl(platform, param) {
     }
     if(param == 'starcraft') {
       return `${platform.href}5`
+    }
+    if(param == 'hok') {
+      return `${platform.href}2336`
     }
     if(param == 'all') {
       return `${platform.href}0`
@@ -179,6 +194,9 @@ function preFixUrl(platform, param) {
     }
     if(param == 'starcraft') {
       return `${platform.href}6`
+    }
+    if(param == 'hok') {
+      return `${platform.href}103`
     }
     if(param == 'all') {
       return `${platform.href}0`

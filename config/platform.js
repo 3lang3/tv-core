@@ -23,6 +23,11 @@ module.exports = {
             name_en: 'TV Game',
         },
         {
+            name: 'hok',
+            name_cn: '王者荣耀',
+            name_en: 'Honour of Kings',
+        },
+        {
             name: 'hearthstone',
             name_cn: '炉石',
             name_en: 'Hearthstone',
