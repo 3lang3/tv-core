@@ -18,6 +18,11 @@ module.exports = {
             name_en: 'Counter-Strike: Global Offensive',
         },
         {
+            name: 'wow',
+            name_cn: '魔兽世界',
+            name_en: 'World Of Warcraft',
+        },
+        {
             name: 'tvgame',
             name_cn: '主机游戏',
             name_en: 'TV Game',

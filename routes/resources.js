@@ -59,6 +59,9 @@ function preFixUrl(platform, param) {
     if(param == 'overwatch') {
       return `${platform.href}Overwatch`
     }
+    if(param == 'wow') {
+      return `${platform.href}World%20of%20Warcraft`
+    }
     if(param == 'hearthstone') {
       return `${platform.href}Hearthstone`
     }
@@ -76,6 +79,9 @@ function preFixUrl(platform, param) {
   if(platform.name == 'douyu') {
     if(param == 'starcraft') {
       return `${platform.href}sc`
+    }
+    if(param == 'wow') {
+      return `${platform.href}WOW`
     }
     if(param == 'hearthstone') {
       return `${platform.href}How`
@@ -110,7 +116,10 @@ function preFixUrl(platform, param) {
     if(param == 'tvgame') {
       return `${platform.href}zhuji`
     }
-    if(param == 'tvgame') {
+    if(param == 'wow') {
+      return `${platform.href}WOW`
+    }
+    if(param == 'kof') {
       return `${platform.href}all&labelid=93`
     }
   }
@@ -140,6 +149,9 @@ function preFixUrl(platform, param) {
     if(param == 'hok') {
       return `${platform.href}115/100/1.json`
     }
+    if(param == 'wow') {
+      return `${platform.href}8/100/1.json`
+    }
   }
   
 
@@ -167,6 +179,9 @@ function preFixUrl(platform, param) {
     }
     if(param == 'hok') {
       return `${platform.href}2336`
+    }
+    if(param == 'wow') {
+      return `${platform.href}8`
     }
     if(param == 'all') {
       return `${platform.href}0`
@@ -197,6 +212,9 @@ function preFixUrl(platform, param) {
     }
     if(param == 'hok') {
       return `${platform.href}103`
+    }
+    if(param == 'wow') {
+      return `${platform.href}55`
     }
     if(param == 'all') {
       return `${platform.href}0`
