@@ -159,7 +159,7 @@ function autoFetch() {
   async.forever(next => {
     fn(() => setTimeout(() => {
       next(null)
-    }, 60 * 1000))
+    }, 90 * 1000))
   }, err => {
     console.log(err)
   })

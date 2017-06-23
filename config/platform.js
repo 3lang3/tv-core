@@ -43,6 +43,11 @@ module.exports = {
             name_en: 'Overwatch',
         },
         {
+            name: 'fight',
+            name_cn: '格斗游戏',
+            name_en: 'Fighting Games',
+        },
+        {
             name: 'starcraft',
             name_cn: '星际争霸',
             name_en: 'Starcraft',
@@ -51,6 +56,16 @@ module.exports = {
             name: 'girls',
             name_cn: '娱乐频道',
             name_en: 'Girls Channel',
+        },
+        {
+            name: 'moive',
+            name_cn: '电影频道',
+            name_en: 'Moive Channel',
+        },
+        {
+            name: 'outdoor',
+            name_cn: '户外频道',
+            name_en: 'Outdoor Channel',
         },
         {
             name: 'all',

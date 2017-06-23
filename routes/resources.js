@@ -50,6 +50,12 @@ function preFixUrl(platform, param) {
 		if(param == 'dota2') {
       return `${platform.href}Dota+2`
     }
+    if(param == 'fight') {
+      return `${platform.href}Street%20Fighter%20V`
+    }
+    if(param == 'outdoor') {
+      return `${platform.href}IRL`
+    }
     if(param == 'csgo') {
       return `${platform.href}Counter-Strike%3A%20Global%20Offensive`
     }
@@ -80,6 +86,12 @@ function preFixUrl(platform, param) {
     if(param == 'starcraft') {
       return `${platform.href}sc`
     }
+    if(param == 'outdoor') {
+      return `${platform.href}HW`
+    }
+    if(param == 'fight') {
+      return `${platform.href}FTG`
+    }
     if(param == 'wow') {
       return `${platform.href}WOW`
     }
@@ -88,6 +100,9 @@ function preFixUrl(platform, param) {
     }
     if(param == 'hok') {
       return `${platform.href}wzry`
+    }
+    if(param == 'moive') {
+      return `${platform.href}stdp`
     }
     if(param == 'all') {
       return `http://www.douyu.com/directory/all`
@@ -101,11 +116,23 @@ function preFixUrl(platform, param) {
     if(param == 'hok') {
       return `${platform.href}wangzhe`
     }
+    if(param == 'outdoor') {
+      return `${platform.href}huwai`
+    }
+    if(param == 'moive') {
+      return `${platform.href}dzh`
+    }
   }
 
   if(platform.name == 'huomao') {
     if(param == 'csgo') {
       return `${platform.href}CSGO`
+    }
+    if(param == 'outdoor') {
+      return `${platform.href}Outdoor`
+    }
+    if(param == 'fight') {
+      return `${platform.href}FTG`
     }
     if(param == 'overwatch') {
       return `${platform.href}Overwatch`
@@ -121,6 +148,9 @@ function preFixUrl(platform, param) {
     }
     if(param == 'kof') {
       return `${platform.href}all&labelid=93`
+    }
+    if(param == 'moive') {
+      return `${platform.href}Movies`
     }
   }
 
@@ -154,10 +184,12 @@ function preFixUrl(platform, param) {
     }
   }
   
-
   if(platform.name == 'huya') {
     if(param == 'dota2') {
       return `${platform.href}7`
+    }
+    if(param == 'outdoor') {
+      return `${platform.href}2836`
     }
     if(param == 'csgo') {
       return `${platform.href}862`
@@ -183,6 +215,12 @@ function preFixUrl(platform, param) {
     if(param == 'wow') {
       return `${platform.href}8`
     }
+    if(param == 'moive') {
+      return `${platform.href}2135`
+    }
+    if(param == 'fight') {
+      return ``
+    }
     if(param == 'all') {
       return `${platform.href}0`
     }
@@ -191,6 +229,9 @@ function preFixUrl(platform, param) {
   if(platform.name == 'longzhu') {
     if(param == 'dota2') {
       return `${platform.href}30`
+    }
+    if(param == 'outdoor') {
+      return `${platform.href}127`
     }
     if(param == 'lol') {
       return `${platform.href}4`
@@ -216,6 +257,12 @@ function preFixUrl(platform, param) {
     if(param == 'wow') {
       return `${platform.href}55`
     }
+    if(param == 'moive') {
+      return `${platform.href}112`
+    }
+    if(param == 'fight') {
+      return ``
+    }
     if(param == 'all') {
       return `${platform.href}0`
     }
@@ -224,11 +271,11 @@ function preFixUrl(platform, param) {
   if(platform.name == 'bilibili') {
     if(param == 'tvgame') {
       return `${platform.href}single`
-    }else if(param == 'all') {
-      return `${platform.href}all`
-    }else {
-      return ``;
     }
+    if(param == 'all') {
+      return `${platform.href}all`
+    }
+    return ``;
   }
 
 	return `${platform.href}${param}`;
