@@ -285,7 +285,7 @@ function quanminParse(datas, param, cb) {
     if(_view.indexOf('万') > -1 ) _view = parseFloat(_view)*10000;
     if(_view < 500) return;
     var room = {
-      roomId: $(el).find('.common_w-card_href').attr('href').substr(1),
+      roomId: $(el).find('.common_w-card_href').attr('href').split('.tv/')[1],
       type: param,
       title: $(el).find('.common_w-card_title').text().trim(),
       viewNumber: parseFloat(_view),

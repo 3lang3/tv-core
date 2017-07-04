@@ -113,6 +113,50 @@ router.get('/recommend', (req, res, next) => {
   }, 1000)
 });
 
+// screen apis
+router.get('/screen/:rooms', (req, res, next) => {
+  let rooms;
+
+  try {
+    rooms = req.params.rooms.split('--');
+  }catch(e) {
+    console.log(e)
+  }
+
+  let empytAry = [], _room, _id, _platform, results = [];
+
+  rooms.forEach((el, index) => {
+    if(!el.length) return;
+
+    _room = el.split('_');
+    _platform = _room[0];
+    _id = _room[1].indexOf('{') > -1 ? JSON.parse(_room[1]) : _room[1];
+
+    empytAry.push({ roomId: _id, platform: _platform });
+  })
+
+  _.each(fetchResultData, (platform, key) => {
+    _.each(platform, (item, keys) => {
+      _.each(empytAry, (el, index) => {
+        if(typeof el.roomId == 'object') {
+          if(JSON.stringify(el.roomId) == JSON.stringify(item.roomId) && el.platform == item.platform) {
+            results.push(item)
+          }
+        }else {
+          if(el.roomId == item.roomId && el.platform == item.platform) {
+            results.push(item)
+          }
+        }
+
+     })
+    })
+  })
+
+  setTimeout(function(){
+    res.json(_.uniqBy(results, 'anchor'))
+  }, 1000)
+});
+
 // category api
 router.get('/categorys', (req, res, next) => {
   let data = _.cloneDeep(platformConfig.gameType);

@@ -3,6 +3,16 @@ let config = require('./index');
 module.exports = {
     gameType: [
         {
+            name: 'all',
+            name_cn: '全部直播',
+            name_en: 'All Channel',
+        },
+        {
+            name: 'moive',
+            name_cn: '电影频道',
+            name_en: 'Moive Channel',
+        },
+        {
             name: 'dota2',
             name_cn: '刀塔2',
             name_en: 'Dota 2',
@@ -53,24 +63,14 @@ module.exports = {
             name_en: 'Starcraft',
         },
         {
-            name: 'girls',
-            name_cn: '娱乐频道',
-            name_en: 'Girls Channel',
-        },
-        {
-            name: 'moive',
-            name_cn: '电影频道',
-            name_en: 'Moive Channel',
-        },
-        {
             name: 'outdoor',
             name_cn: '户外频道',
             name_en: 'Outdoor Channel',
         },
         {
-            name: 'all',
-            name_cn: '全部直播',
-            name_en: 'All Channel',
+            name: 'girls',
+            name_cn: '娱乐频道',
+            name_en: 'Girls Channel',
         }
     ],
     platforms: [
