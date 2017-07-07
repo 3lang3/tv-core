@@ -5,34 +5,58 @@ var router = express.Router();
 var app = express();
 var io = require('socket.io')(server);
 var config = require('../config');
+var superagent = require('superagent');
 
-// http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip=219.242.98.111 (ip tracker)
+var ipTrackerUrl = 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip=';
 
 //在线用户
 var onlineUsers = {};
 //当前在线人数
 var onlineCount = 0;
 
+let trackHandler = (ip) => {
+	return new Promise((resolve, reject) => {
+
+		superagent
+			.get(`${ipTrackerUrl}${ip}`)
+			.timeout(500)
+			.end((err, res) => {
+				if(err) {
+					reject('error')
+				}else {
+					resolve(JSON.parse(res.text))
+				}
+			})
+	})
+}
+
 
 io.on('connection', function (socket) {
-  console.log('a user connected!');
 
-  socket.on('login', function (data) {
+  socket.on('login', async function (data) {
 		//console.log(socket)
     var uid = socket.id
     socket.uid = uid;
     socket.user = data;
+    socket.country = '';
 
     //检查在线列表，如果不在里面就加入
 		if(!onlineUsers.hasOwnProperty(uid)) {
-			onlineUsers[uid] = data.username;
+			onlineUsers[uid] = data.nickname;
 			//在线人数+1
 			onlineCount++;
 		}
 		
+		// 获取用户区域信息
+		var ip = socket.handshake.address;
+
+		let ipInfo = await trackHandler(ip);
+
+		if(ipInfo != '-3') data.ip = ipInfo;
+
 		//向所有客户端广播用户加入
 		io.emit('message:login', {type: 'log', onlineUsers:onlineUsers, onlineCount:onlineCount, user: data, text: `来啦`});
-		console.log(data.username+'加入了聊天室');
+		console.log(data.nickname+'加入了聊天室');
 
   });
 
