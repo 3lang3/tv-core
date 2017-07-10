@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "production": "cross-env NODE_ENV=production node ./bin/www"
   },
   "dependencies": {
     "async": "^2.3.0",
@@ -32,6 +33,7 @@
     "superagent": "^3.5.2"
   },
   "devDependencies": {
+    "cross-env": "^5.0.1",
     "mongoose": "^4.9.8"
   }
 }

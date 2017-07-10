@@ -1,8 +1,8 @@
 let domain = require('./domain');
-
+const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
-    frontHost: `http://${domain}:8080/`,
+    frontHost: isProd ? `http://${domain}` : `http://${domain}:8080`,
     endHost: `http://${domain}:3000/`,
     Host: 'localhost',
     openDotaApiHost: 'https://api.opendota.com/api/',
