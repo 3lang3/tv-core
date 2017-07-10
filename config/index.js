@@ -4,7 +4,7 @@ let isProd = process.env.NODE_ENV === 'production';
 module.exports = {
     frontHost: isProd ? `http://${domain}` : `http://${domain}:8080`,
     endHost: `http://${domain}:3000/`,
-    Host: 'localhost',
+    Host: `${domain}`,
     openDotaApiHost: 'https://api.opendota.com/api/',
     mongodbUri: `//${domain}/`,
     mongodbName: 'tv',
