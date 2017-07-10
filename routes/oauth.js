@@ -157,6 +157,7 @@ passport.use(new LocalStrategy({
 
      User.findOne({ email: email }, function (err, user) {
       if (err) { 
+        console.log('register err', err)
         return done(err); 
       }
       if (!user) {

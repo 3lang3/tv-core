@@ -10,7 +10,7 @@ var cors = require('cors');
 var mongoose = require('mongoose');
 var config = require('./config')
 
-mongoose.connect(`mongodb:${config.mongodbUri}${config.mongodbName}`);
+mongoose.connect(`mongodb:${config.mongodbUri}${config.mongodbName}`, {useMongoClient:true});
 
 var apis = require('./routes/apis');
 var login = require('./routes/web');
