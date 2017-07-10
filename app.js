@@ -10,7 +10,12 @@ var cors = require('cors');
 var mongoose = require('mongoose');
 var config = require('./config')
 
-mongoose.connect(`mongodb:${config.mongodbUri}${config.mongodbName}`, {useMongoClient:true});
+var db = mongoose.createConnection(`mongodb:${config.mongodbUri}${config.mongodbName}`);
+
+db.on('error', console.error.bind(console, '连接错误:'));
+db.once('open', function() {
+    console.log('连接成功');
+})
 
 var apis = require('./routes/apis');
 var login = require('./routes/web');
