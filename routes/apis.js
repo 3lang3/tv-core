@@ -23,17 +23,20 @@ var fetchResultData = {}
 
 function checkRegister(req, res, next){
   var authkey = req.session.passport ? req.session.passport.user : null;
-
+  console.log('meta err enter: ', authkey)
   if(!authkey) return next();
   User.findOne({authkey: authkey }, (err, doc) => {
+    console.log('meta err: ', err)
     if(err) return  res.json('error');
     if(doc) {
+      console.log('meta doc: ')
       return res.json({
         status: true,
         user: doc,
         version: config.version,
       })
     }else {
+      console.log('meta next: ')
       next()
     }
   })
@@ -41,6 +44,7 @@ function checkRegister(req, res, next){
 
 // user metadata
 router.use('/metadata', checkRegister, (req, res, next) => {
+    console.log('meta enter: ')
     res.json({
       status: false,
       user: false,
