@@ -146,22 +146,17 @@ passport.use(new LocalStrategy({
   session: false,
   passReqToCallback: true,
 },(req, email, password, done) => {
-  console.log('enter local ')
 
   var email = req.query.email,
       nickname = req.query.nickname,
       md5 = crypto.createHash('md5'),
       password = md5.update(req.query.password).digest('base64');
-  
-  console.log(email, nickname)
-
+    
   // rigister
   if(nickname) {
 
      User.findOne({ email: email }, function (err, user) {
-       console.log('enter register mongo ')
       if (err) { 
-        console.log('register err', err)
         return done(err); 
       }
       if (!user) {
@@ -183,7 +178,6 @@ passport.use(new LocalStrategy({
     });
   }else {
     // login
-       console.log('enter login ')    
     User.findOne({ email: email, password: password }, function (err, user) {
       if (err) { 
         console.log('login err', err)
