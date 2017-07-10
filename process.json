@@ -1,0 +1,11 @@
+{
+  "name"        : "tv-core",  // 应用名称
+  "script"      : "./bin/www",  // 实际启动脚本
+  "cwd"         : "./",  // 当前工作路径
+  "watch_options": {
+    "followSymlinks": false
+  },
+  "env": {
+      "NODE_ENV": "production"  // 环境参数，当前指定为生产环境
+  }
+}

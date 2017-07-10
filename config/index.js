@@ -1,5 +1,5 @@
 let domain = require('./domain');
-const isProd = process.env.NODE_ENV === 'production';
+let isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
     frontHost: isProd ? `http://${domain}` : `http://${domain}:8080`,
