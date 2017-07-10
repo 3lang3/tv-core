@@ -109,6 +109,28 @@ function preFixUrl(platform, param) {
     }
   }
 
+  if(platform.name == 'panda') {
+    if(param == 'outdoor') {
+      return `${platform.href}hwzb`
+    }
+    if(param == 'hok') {
+      return `${platform.href}kingglory`
+    }
+    if(param == 'fight') {
+      return `${platform.href}ftg`
+    }
+    if(param == 'tvgame') {
+      return `${platform.href}pubg`
+    }
+
+    if(param == 'moive') {
+      return `${platform.href}cartoon`
+    }
+    if(param == 'all') {
+      return `http://www.douyu.com/directory/all`
+    }
+  }
+
   if(platform.name == 'quanmin') {
     if(param == 'starcraft') {
       return ``

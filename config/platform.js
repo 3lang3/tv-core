@@ -99,6 +99,11 @@ module.exports = {
             href: `http://www.quanmin.tv/game/`,
             minView: 100,
         },
+        {
+            name: 'panda',
+            href: `https://www.panda.tv/ajax_sort?token=&pageno=1&pagenum=120&classification=`,
+            minView: 100,
+        },
         // {
         //     name: 'zhanqi',
         //     href: `https://www.zhanqi.tv/api/static/v2.1/game/live/`,

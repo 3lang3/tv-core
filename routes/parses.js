@@ -334,6 +334,37 @@ function zhanqiParse(datas, param, cb) {
   return rooms;
 }
 
+function pandaParse(datas, param, cb) {
+  var data;
+
+  try{
+    data = JSON.parse(datas.body);
+  }catch(e){
+    return [];
+  }
+  if(!data.data.items.length) return [];
+  var room, rooms = [];
+  _.each(data.data.items, (el, index) => {
+    var _view = el.person_num;
+    if(_view < 200) return;
+    var _live = true;
+
+    room = {
+      roomId: el.id,
+      type: param,
+      title: el.name,
+      viewNumber: parseFloat(_view),
+      view: _view,
+      platform: 'panda',
+      live: _live,
+      anchor: el.userinfo.nickName,
+      cover: el.pictures.img,
+    }
+    rooms.push(room);
+  })
+
+  return rooms;
+}
 
 
 exports.douyuParse = douyuParse;
@@ -346,3 +377,4 @@ exports.douyuvideoParse = douyuvideoParse;
 exports.afreecatvParse = afreecatvParse;
 exports.quanminParse = quanminParse;
 exports.zhanqiParse = zhanqiParse;
+exports.pandaParse = pandaParse;

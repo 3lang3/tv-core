@@ -15,6 +15,7 @@ var platforms = [
 	{name: 'huya', href: `http://www.huya.com/cache.php?m=LiveList&do=getLiveListByPage&gameId=1663`},
 	{name: 'quanmin', href: `http://www.quanmin.tv/game/showing`},
 	{name: 'zhanqi', href: `https://www.zhanqi.tv/api/static/v2.1/game/live/65/100/1.json`},
+	{name: 'panda', href: `https://www.panda.tv/ajax_sort?token=&pageno=1&pagenum=120&classification=yzdr`},
 	{name: 'afreecatv', href: `http://sch.afreecatv.com/api.php?nCateNo=00080000&m=vodSearch&v=1.0&szOrder=view_cnt&szFileType=ALL&szTerm=1week&nListCnt=40&c=UTF-8&w=webk&l=def&bAdultFlag=Y`},
 ];
 
