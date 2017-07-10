@@ -16,21 +16,21 @@ app.get('/loginSteam', passport.authenticate('steam', {
 
 // steam oauth reback
 app.get('/returnSteam', passport.authenticate('steam', {
-	failureRedirect: `${config.frontHost}login/false`
+	failureRedirect: `${config.frontHost}/login/false`
 }), (req, res) => {
 	return res.redirect(`${config.frontHost}`);
 })
 
 // local login
 app.get('/login', passport.authenticate('local', {
-	failureRedirect: `${config.frontHost}login/false`
+	failureRedirect: `${config.frontHost}/login/false`
 }), (req, res) => {
 	return res.redirect(`${config.frontHost}`);
 })
 
 // local register
 app.get('/register', passport.authenticate('local', {
-	failureRedirect: `${config.frontHost}register/false`
+	failureRedirect: `${config.frontHost}/register/false`
 }), (req, res) => {
 	return res.redirect(`${config.frontHost}`);
 })
