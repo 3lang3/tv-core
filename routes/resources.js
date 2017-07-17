@@ -127,7 +127,7 @@ function preFixUrl(platform, param) {
       return `${platform.href}cartoon`
     }
     if(param == 'all') {
-      return `http://www.douyu.com/directory/all`
+      return `https://www.panda.tv/live_lists?status=2&order=person_num&pageno=1&pagenum=120`
     }
   }
 
