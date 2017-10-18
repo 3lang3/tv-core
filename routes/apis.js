@@ -16,15 +16,11 @@ var User = require('./../schema/User');
 var crypto = require('crypto');
 var config = require('../config');
 var platformConfig = require('../config/platform');
-var resourceEnginer = require('./resources');
 var Spider = require('./new');
 var FetchImg = require('./img');
-var girlSFetchEnginer = require('./girls');
 var ScreenModal = require('../schema/Screen');
 var CategoryModal = require('../schema/Category');
-var TestModal = require('../schema/Test');
 
-var fetchResultData = {}
 
 function checkRegister(req, res, next){
   var authkey = req.session.passport ? req.session.passport.user : null;
@@ -58,24 +54,16 @@ router.use('/metadata', checkRegister, (req, res, next) => {
 })
 
 // user favorite list online item
-router.use('/online', (req, res, next) => {
+router.use('/online', async (req, res, next) => {
   let favoriteList = JSON.parse(req.body.json);
   let results = [];
 
+  for(let el of favoriteList) {
+    let t = await ScreenModal.findOne({anchor: el.anchor, roomId: el.roomId})
+    t && results.push(t)
+  }
 
-  _.each(fetchResultData, (platform, key) => {
-    _.each(platform, (item, keys) => {
-      _.each(favoriteList, (favorite, index) => {
-       if(favorite.anchor == item.anchor && favorite.roomId == item.roomId) {
-         results.push(favorite)
-       }
-     })
-    })
-  })
-  setTimeout(() => {
-    res.json(_.uniqBy(results, 'anchor'));
-  }, 1000)
-  
+  res.json(_.uniqBy(results, 'anchor'));
 })
 
 // invite auth
@@ -88,39 +76,6 @@ router.use('/invite/:code', (req, res, next) => {
   }
 })
 
-// search (item.title && item.anchor)
-router.get('/search/:keyword', (req, res, next) => {
-  let keyword = req.params.keyword.toLowerCase() || null;
-  let results = [], result = [] ;
-  result = _.each(fetchResultData, (platform, key) => {
-    result = _.filter( platform, (item, keys) => {
-      return  JSON.stringify(item.title).toLowerCase().indexOf(keyword) > -1 || JSON.stringify(item.anchor).toLowerCase().indexOf(keyword) > -1;
-    })
-    results.push(result);
-  })
-
-  let datas = _.flatten(results, true)
-
-  setTimeout(() => {
-    res.json(_.uniqBy(datas, 'anchor'));
-  }, 1000)
-
-})
-
-// recommend apis
-router.get('/recommend', (req, res, next) => {
-  let results = {};
-  let data = _.cloneDeep(fetchResultData);
-
-  _.each(data, (platform, key) => {
-    if(key == 'all') return;
-    results[key] = platform.splice(0, 8)
-  })
-
-  setTimeout(function(){
-    res.json(results)
-  }, 1000)
-});
 
 // screen apis
 router.get('/screen/:rooms', async (req, res, next) => {
@@ -151,41 +106,13 @@ router.get('/screen/:rooms', async (req, res, next) => {
 
 });
 
-// category api
-router.get('/categorys', (req, res, next) => {
-  let data = _.cloneDeep(platformConfig.gameType);
-
-  _.each(fetchResultData, (platform, key) => {
-    platformConfig.gameType.forEach((el, index) => {
-      if(key == el.name) {
-        data[index].count = platform.length
-      }
-    })
-  })
-  
-  res.json(data)
-})
-
-// categorys apis
-router.get('/categorys/:name', (req, res, next) => {
-  let params = req.params.name || 'all';
-  _.each(fetchResultData, (platform, key) => {
-    if(params == key) {
-      return setTimeout(() => res.json(platform), 500)
-    }
-  })
-});
-
 // random category apis
-router.get('/random', (req, res, next) => {
-  let result = [];
-  _.each(fetchResultData, (platform, key) => {
-    if(key != 'all' || key != 'girls') {
-      result.push(_.sample(platform, 1));
-    }
-  })
+router.get('/random', async (req, res, next) => {
 
-  return setTimeout(() => res.json(result), 500)
+  let lists = await ScreenModal.find({live: true});
+  let result = _.sampleSize(lists, 10)
+
+  res.json(result)
 });
 
 autoFetch();
@@ -333,29 +260,5 @@ let categoryFilter = () => {
   })
 }
 
-const testFuc = () => {
-  let data = [];
-
-  for(var i = 0; i < 1000; i++ ) {
-    data.push({
-      updateOne: {
-        filter: { count: i },
-        update: {
-          count: i,
-        },
-        upsert: true,
-      }
-    })
-  }
-
-  console.time('test time')
-  TestModal.bulkWrite(data, (err, result) => {
-     
-    if(err) console.log('err', err)
-    console.log(result)
-    console.timeEnd('test time') 
-  })
-}
-// testFuc();
 // categoryFilter();
 module.exports = router;
