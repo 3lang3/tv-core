@@ -1,10 +1,10 @@
 var cheerio = require('cheerio');
 var _ = require('lodash');
+// var ScreenModal = require('../schema/Screen');
+// var Screen = new ScreenModal()
 
-
-function douyuParse(datas, param, cb) {
+function douyuParse(datas, cb) {
   var $;
-
   try{
     $ = cheerio.load(datas.body);
   }catch(e){
@@ -12,13 +12,13 @@ function douyuParse(datas, param, cb) {
   }
 
   var room, rooms = [];
-  $('#live-list-contentbox li').each(function(index, el) {
+  $('li').each(function(index, el) {
     var _view = $(el).find('span.dy-num').text();
     if(_view.indexOf('万') > -1 ) _view = parseFloat(_view)*10000;
     if(_view < 600) return;
     var room = {
       roomId: $(el).data('rid'),
-      type: param,
+      type: $(el).find('span.tag').text().trim(),
       title: $(el).find('h3').text().trim(),
       viewNumber: parseFloat(_view),
       view: $(el).find('span.dy-num').text(),
@@ -117,11 +117,11 @@ function huomaoParse(datas, param, cb) {
     }else {
     	_view = _view.replace(',', '')
     }
-    if(_view < 600) return;
-  	if(el.is_live == '0') return;
+    if(_view < 100) return;
+
     room = {
       roomId: el.room_number,
-      type: param,
+      type: el.gameCname,
       title: el.channel,
       viewNumber: parseFloat(_view),
       view: el.views,
@@ -130,15 +130,16 @@ function huomaoParse(datas, param, cb) {
       anchor: el.nickname || el.username,
       cover: el.image,
     }
+
     rooms.push(room);
   })
 
   return rooms;
 }
 
-function longzhuParse(datas, param, cb) {
+function longzhuParse(datas, cb) {
   var data;
-  //console.log(datas.text)
+
   try{
     data = JSON.parse(datas.body);
   }catch(e){
@@ -147,9 +148,10 @@ function longzhuParse(datas, param, cb) {
   if(!data.data.items.length) return [];
   var room, rooms = [];
   _.each(data.data.items, (el, index) => {
+    if(!el.game[0].name) console.log(el)
     room = {
       roomId: el.channel.id,
-      type: param,
+      type: el.game[0].name,
       title: el.channel.status,
       viewNumber: parseFloat(el.viewers),
       view: el.viewers,
@@ -158,6 +160,7 @@ function longzhuParse(datas, param, cb) {
       anchor: el.channel.name,
       cover: el.preview,
     }
+
     rooms.push(room);
   })
   return rooms;
@@ -170,16 +173,18 @@ function huyaParse(datas, param, cb) {
   }catch(e){
     return [];
   }
+
   if(data.status !== 200) return [];
+
   var room, rooms = [];
   _.each(data.data.datas, (el, index) => {
     var _view = parseFloat(el.totalCount);
-    if(_view < 100) return;
+    if(_view < 500) return;
     var _live = true;
-
+  
     room = {
       roomId: el.privateHost,
-      type: param,
+      type: el.gameFullName,
       title: el.roomName,
       viewNumber: _view,
       view: _view,
@@ -188,6 +193,7 @@ function huyaParse(datas, param, cb) {
       anchor: el.nick,
       cover: el.screenshot,
     }
+
     rooms.push(room);
   })
 
@@ -196,29 +202,32 @@ function huyaParse(datas, param, cb) {
 
 function bilibiliParse(datas, param, cb) {
   var data;
+  
   try{
     data = JSON.parse(datas.body);
   }catch(e){
     return [];
   }
+
   if(data.data.length == 0 ) return [];
   var room, rooms = [];
   _.each(data.data, (el, index) => {
     var _view = el.online;
-    //if(_view < 100) return;
+    if(_view < 100) return;
     var _live = true;
 
     room = {
       roomId: el.roomid,
-      type: param,
+      type: el.areaName,
       title: el.title,
       viewNumber: parseFloat(_view),
       view: _view,
       platform: 'bilibili',
       live: _live,
       anchor: el.uname,
-      cover: el.cover,
+      cover: el.user_cover || el.system_cover,
     }
+
     rooms.push(room);
   })
 
@@ -265,39 +274,32 @@ function afreecatvParse(datas, param, cb) {
 }
 
 function quanminParse(datas, param, cb) {
-  var $;
-
+  var data;
   try{
-    $ = cheerio.load(datas.body);
+    data = JSON.parse(datas.body);
   }catch(e){
     return [];
   }
 
+  if(!data.data.length) return [];
   var room, rooms = [];
-  if($('.list_w-videos').length > 1) {
-    var $par = $('.list_w-videos').eq(1).find('li');
-  }else {
-    var $par = $('.list_w-videos li');
-  }
+  _.each(data.data, (el, index) => {
+  	var _view = el.view;
 
-  $par.each(function(index, el) {
-    var _view = $(el).find('span.common_w-card_views-num').text().trim();
-    if(_view.indexOf('万') > -1 ) _view = parseFloat(_view)*10000;
-    if(_view < 500) return;
-    var room = {
-      roomId: $(el).find('.common_w-card_href').attr('href').split('.tv/')[1],
-      type: param,
-      title: $(el).find('.common_w-card_title').text().trim(),
+    room = {
+      roomId: el.liveId,
+      type: el.category_name,
+      title: el.title,
       viewNumber: parseFloat(_view),
-      view: _view,
+      view: el.view,
       platform: 'quanmin',
       live: true,
-      anchor: $(el).find('.common_w-card_host-name').text().trim(),
-      cover: $(el).find('img.common_w-card_cover').attr('src'),
+      anchor: el.nick,
+      cover: el.live_thumb || el.recommend_new_image,
     }
 
-    rooms.push(room)
-  });
+    rooms.push(room);
+  })
 
   return rooms;
 }
@@ -318,8 +320,8 @@ function zhanqiParse(datas, param, cb) {
     var _live = true;
 
     room = {
-      roomId: el.uid,
-      type: param,
+      roomId: el.id,
+      type: el.fatherGameName,
       title: el.title,
       viewNumber: parseFloat(_view),
       view: _view,
@@ -328,6 +330,7 @@ function zhanqiParse(datas, param, cb) {
       anchor: el.nickname,
       cover: el.bpic,
     }
+
     rooms.push(room);
   })
 
@@ -351,7 +354,7 @@ function pandaParse(datas, param, cb) {
 
     room = {
       roomId: el.id,
-      type: param,
+      type: el.classification.cname,
       title: el.name,
       viewNumber: parseFloat(_view),
       view: _view,
@@ -360,11 +363,63 @@ function pandaParse(datas, param, cb) {
       anchor: el.userinfo.nickName,
       cover: el.pictures.img,
     }
+
     rooms.push(room);
   })
 
   return rooms;
 }
+
+
+function douyuPageCount($) {
+  return $('.classify_li a').eq(0).attr('data-pagecount');
+}
+
+function huyaPageCount($) {
+  return $('#js-list-page').attr('data-pages');
+}
+
+function longzhuPageCount($) {
+  if(!$.data.items.length) return [];
+  
+  return Math.ceil($.data.totalItems / 50)
+}
+
+function huomaoPageCount($) {
+
+  if(!$.status) return [];
+
+  return Math.ceil($.data.allCount / 120)
+}
+
+function quanminPageCount($) {
+  
+    if(!$.data.length) return [];
+  
+    return Math.ceil($.total / 120)
+}
+
+function zhanqiPageCount($) {
+  
+    if(!$.data.rooms.length) return [];
+  
+    return Math.ceil($.data.cnt / 120)
+}
+
+function pandaPageCount($) {
+  
+    if(!$.data.items.length) return [];
+  
+    return Math.ceil($.data.total / 120)
+}
+
+function bilibiliPageCount($) {
+  
+  if(!$.data.list.length) return [];
+  
+    return Math.ceil($.data.total / 30)
+}
+
 
 
 exports.douyuParse = douyuParse;
@@ -378,3 +433,12 @@ exports.afreecatvParse = afreecatvParse;
 exports.quanminParse = quanminParse;
 exports.zhanqiParse = zhanqiParse;
 exports.pandaParse = pandaParse;
+
+exports.douyuPageCount = douyuPageCount;
+exports.huyaPageCount = huyaPageCount;
+exports.longzhuPageCount = longzhuPageCount;
+exports.huomaoPageCount = huomaoPageCount;
+exports.quanminPageCount = quanminPageCount;
+exports.zhanqiPageCount = zhanqiPageCount;
+exports.pandaPageCount = pandaPageCount;
+exports.bilibiliPageCount = bilibiliPageCount;

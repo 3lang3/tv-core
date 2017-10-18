@@ -119,5 +119,61 @@ module.exports = {
             href: `http://api.live.bilibili.com/area/liveList?order=online&area=`,
             minView: 0,
         },
+    ],
+    newPlatform: [
+        {
+            platform: 'huya',
+            name: '虎牙',
+            pageUrl: 'http://www.huya.com/cache.php?m=LiveList&do=getLiveListByPage&tagAll=0',
+            firstPageUrl: 'http://www.huya.com/l',
+            imgUrl: 'https://www.huya.com/g',
+        },
+        {
+            platform: 'douyu',
+            name: '斗鱼',
+            pageUrl: 'https://www.douyu.com/directory/all?isAjax=1',
+            firstPageUrl: 'https://www.douyu.com/directory/all',
+            imgUrl: 'https://www.douyu.com/directory',
+        },
+        {
+            platform: 'huomao',
+            name: '火猫',
+            pageUrl: 'https://www.huomao.com/channels/channel.json?page_size=120&game_url_rule=all&page=1',
+            firstPageUrl: 'https://www.huomao.com/channels/channel.json?page_size=120&game_url_rule=all',
+            imgUrl: 'https://www.huomao.com/game',
+        },
+        {
+            platform: 'longzhu',
+            name: '龙珠',
+            pageUrl: 'http://api.plu.cn/tga/streams?max-results=50&sort-by=views&filter=0&start-index=',
+            imgUrl: 'http://longzhu.com/games/?from=fiallgames',
+        },
+        {
+            platform: 'quanmin',
+            name: '全民',
+            pageUrl: 'http://www.quanmin.tv/json/play/list_',
+            firstPageUrl: 'http://www.quanmin.tv/json/play/list.json',
+            imgUrl: 'https://www.quanmin.tv/category/',
+        },
+        {
+            platform: 'zhanqi',
+            name: '战旗',
+            firstPageUrl: 'https://www.zhanqi.tv/api/static/v2.1/live/list/120/1.json',
+            pageUrl: 'https://www.zhanqi.tv/api/static/v2.1/live/list/120/',
+            imgUrl: 'https://www.zhanqi.tv/games',
+        },
+        {
+            platform: 'panda',
+            name: '熊猫',
+            firstPageUrl: 'http://www.panda.tv/live_lists?status=2&order=person_num&pageno=1&pagenum=120',
+            pageUrl: 'http://www.panda.tv/live_lists?status=2&order=person_num&pagenum=120&pageno=',
+            imgUrl: 'https://www.panda.tv/cate',
+        },
+        {
+            platform: 'bilibili',
+            name: 'bilibili',
+            firstPageUrl: 'http://api.live.bilibili.com/area/home?area=all&order=online&cover=1',
+            pageUrl: 'http://api.live.bilibili.com/area/liveList?area=all&order=online&page=',
+        }
     ]
 }

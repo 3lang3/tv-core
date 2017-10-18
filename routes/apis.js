@@ -17,7 +17,12 @@ var crypto = require('crypto');
 var config = require('../config');
 var platformConfig = require('../config/platform');
 var resourceEnginer = require('./resources');
+var Spider = require('./new');
+var FetchImg = require('./img');
 var girlSFetchEnginer = require('./girls');
+var ScreenModal = require('../schema/Screen');
+var CategoryModal = require('../schema/Category');
+var TestModal = require('../schema/Test');
 
 var fetchResultData = {}
 
@@ -118,7 +123,7 @@ router.get('/recommend', (req, res, next) => {
 });
 
 // screen apis
-router.get('/screen/:rooms', (req, res, next) => {
+router.get('/screen/:rooms', async (req, res, next) => {
   let rooms;
 
   try {
@@ -129,36 +134,21 @@ router.get('/screen/:rooms', (req, res, next) => {
 
   let empytAry = [], _room, _id, _platform, results = [];
 
-  rooms.forEach((el, index) => {
-    if(!el.length) return;
-
-    _room = el.split('_');
+  for(let index in rooms) {
+    if(!rooms[index]) continue;
+    _room = rooms[index].split('_');
     _platform = _room[0];
     _id = _room[1].indexOf('{') > -1 ? JSON.parse(_room[1]) : _room[1];
 
-    empytAry.push({ roomId: _id, platform: _platform });
-  })
+    let a = await ScreenModal.findOne({platform: _platform, roomId: _id})
 
-  _.each(fetchResultData, (platform, key) => {
-    _.each(platform, (item, keys) => {
-      _.each(empytAry, (el, index) => {
-        if(typeof el.roomId == 'object') {
-          if(JSON.stringify(el.roomId) == JSON.stringify(item.roomId) && el.platform == item.platform) {
-            results.push(item)
-          }
-        }else {
-          if(el.roomId == item.roomId && el.platform == item.platform) {
-            results.push(item)
-          }
-        }
+    results.push(a);
+  }
 
-     })
-    })
-  })
+  console.log(results)
 
-  setTimeout(function(){
-    res.json(_.uniqBy(results, 'anchor'))
-  }, 1000)
+  res.json(results)
+
 });
 
 // category api
@@ -200,29 +190,172 @@ router.get('/random', (req, res, next) => {
 
 autoFetch();
 function autoFetch() {
-  let params = [];
-
-  platformConfig.gameType.map( category => params.push(category.name) )
-
+  let newPlatform = platformConfig.newPlatform;
   async.forever(next => {
     fn(() => setTimeout(() => {
+      console.log('finished!')
       next(null)
-    }, 90 * 1000))
+    }, 5 * 60 * 1000))
   }, err => {
     console.log(err)
   })
 
   function fn(cb) {
-    async.eachLimit(params, 1 , (name, callback) => {
-        if(name == 'girls') {
-          return girlSFetchEnginer(fetchResultData, callback)
-        }
-            
-        return resourceEnginer(name, fetchResultData, callback)
+    async.eachLimit(newPlatform, 1, (platform, callback) => {
+      var _newspider = new Spider(platform);
+      _newspider.init(callback)
+    }, (err) => {
+      console.log(err || 'All platform done!')
+      categoryFilter();
     })
     return cb()
   }
-
 }
 
+
+// test apis
+router.get('/search', async (req, res, next) => {
+
+  let pageLimit = 40;
+  let {type, word, page, platform} = req.query;
+  let query, findObj = {};
+
+  if(type == 'getCategory') {
+    query = await CategoryModal.findOne({name: 'All type', }).sort({tv: -1 });
+    let platforms = await CategoryModal.findOne({name: 'Platform type'});
+    return res.json({list: query, platforms: platforms})
+  }
+
+  if(type == 'keyword') {
+    console.log('enter search')
+    var reg = new RegExp(word, 'i');
+    query = await ScreenModal.find({$or : [{title :  reg},{anchor : reg}]}).sort({viewNumber: -1 }).limit(10)
+  }
+
+  if(type == 'category') {
+    query = await ScreenModal.find({type: word, live: true}).sort({viewNumber: -1 }).skip(pageLimit * page).limit(pageLimit);
+  }
+
+  if(type == 'platform') {
+    query = await ScreenModal.find({platform: word, live: true}).sort({viewNumber: -1 }).skip(pageLimit * page).limit(pageLimit);
+  }
+
+  if(type == 'all') {
+    platform && platform !='all' ? findObj.platform = platform : '';
+    word && word !='all' ? findObj.type = word : '';
+    findObj.live = true;
+    query = await ScreenModal.find(findObj).sort({viewNumber: -1 }).skip(pageLimit * page).limit(pageLimit);
+  }
+
+  res.json(query);
+
+});
+
+// get img
+router.get('/getImg', async (req, res, next) => {
+
+  for(let platform of platformConfig.newPlatform) {
+    if(platform.imgUrl) {
+      await FetchImg(platform.imgUrl, platform.platform);
+    }
+  }
+  
+
+  res.json({status: true, message: 'done!'})
+}) 
+
+
+let categoryFilter = () => {
+  return new Promise(async (resolve, reject) => {
+    console.time();
+    let typeQuery = await ScreenModal.distinct('type');
+    let platformQuery = await ScreenModal.distinct('platform');
+    let allLiveList = await ScreenModal.find({live: true});
+    let screenResult = {};
+    let categoryArray = [];
+
+    
+    for(let i of typeQuery) {
+      screenResult[i] = [];
+
+      allLiveList.forEach(list => {
+        if(list.type == i) {
+          screenResult[i].push(list)
+        }
+      })
+    }
+
+    for(let type in screenResult) {
+
+      let view = 0;
+
+      screenResult[type].forEach(doc => {
+        view += doc.viewNumber*1;
+      })
+
+      categoryArray.push({
+        type: type,
+        view: view,
+        tv: screenResult[type].length,
+      })
+    }
+
+    categoryArray.sort((a, b) => b.tv - a.tv );
+    
+    CategoryModal.bulkWrite([
+      {
+        updateOne: {
+          filter: {name: 'All type'},
+          update: {
+            name: 'All type',
+            description: '所有直播类型',
+            result: categoryArray
+          },
+          upsert: true,
+        },
+      },  
+      {
+        updateOne: {
+          filter: {name: 'Platform type'},
+          update: {
+            name: 'Platform type',
+            description: '所有平台',
+            result: platformQuery
+          },
+          upsert: true,
+        }
+      }
+    ]).then(() => {
+      console.log('The filer database is done!')
+      console.timeEnd()
+      resolve(categoryArray)
+    })
+  })
+}
+
+const testFuc = () => {
+  let data = [];
+
+  for(var i = 0; i < 1000; i++ ) {
+    data.push({
+      updateOne: {
+        filter: { count: i },
+        update: {
+          count: i,
+        },
+        upsert: true,
+      }
+    })
+  }
+
+  console.time('test time')
+  TestModal.bulkWrite(data, (err, result) => {
+     
+    if(err) console.log('err', err)
+    console.log(result)
+    console.timeEnd('test time') 
+  })
+}
+// testFuc();
+// categoryFilter();
 module.exports = router;

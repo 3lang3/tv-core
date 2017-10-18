@@ -1,6 +1,8 @@
 let domain = require('./domain');
 let isProd = process.env.NODE_ENV === 'production';
 
+console.log(process.env.NODE_ENV)
+
 module.exports = {
     frontHost: isProd ? `http://${domain}` : `http://${domain}:8080`,
     endHost: `http://${domain}:3000/`,
