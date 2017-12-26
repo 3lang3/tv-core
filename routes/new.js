@@ -28,7 +28,7 @@ class Spider {
             _result.forEach(el => {
                 __result.push({
                     updateOne: {
-                        filter: { platform: el.platform, roomId: el.roomId },
+                        filter: { id: el.id },
                         update: {$set: el},
                         upsert: true,
                     }
@@ -38,7 +38,6 @@ class Spider {
             ScreenModal.find({platform: this.platform}).updateMany({ live: false }).exec(() => {
                 console.time(`${this.platform} time`)
                 ScreenModal.bulkWrite(__result, (err, r => {
-                    console.log(err || r)
                     console.timeEnd(`${this.platform} time`)
                     console.log(`-------------------------------${this.platform} database update finished!  data length is ${_result.length}`)
                     callback && callback(err, _result)

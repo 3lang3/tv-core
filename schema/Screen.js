@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var screenSchema = mongoose.Schema({
+    id: {type: [String], index: true},
     roomId: String,
     type: String,
     title: String,
@@ -10,13 +11,6 @@ var screenSchema = mongoose.Schema({
     anchor: String,
     cover: String,
 })
-
-screenSchema.methods.updateByScreen = function(screen, callback) {
-    this.model('Screen').update({platform: screen.platform, roomId: screen.roomId}, {$set: screen}, {upsert: true}, (err, doc) => {
-        if(err) callback && callback(null, err)
-        callback && callback(null, doc)
-    })
-}
 
 // mongoexport -d test -c students -o students.dat 
 // mongoimport -d test -c students students.dat 

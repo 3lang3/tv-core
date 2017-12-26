@@ -17,6 +17,7 @@ function douyuParse(datas, cb) {
     if(_view.indexOf('万') > -1 ) _view = parseFloat(_view)*10000;
     if(_view < 600) return;
     var room = {
+      id: 'douyu' + $(el).data('rid'),
       roomId: $(el).data('rid'),
       type: $(el).find('span.tag').text().trim(),
       title: $(el).find('h3').text().trim(),
@@ -51,6 +52,7 @@ function douyuvideoParse(datas, param, cb) {
     if(_view.indexOf('万') > -1 ) _view = parseFloat(_view)*10000;
 
     room = {
+      id: 'douyuvideo' + _id,
       roomId: _id,
       type: param,
       title: el.title,
@@ -82,6 +84,7 @@ function twitchParse(datas, param, cb) {
     var _live = el.stream_type == 'live' ? true : false;
   	if(!_live) return;
     room = {
+      id: 'twitch' + el.channel.name,
       roomId: el.channel.name,
       type: param,
       title: el.channel.status,
@@ -120,6 +123,7 @@ function huomaoParse(datas, param, cb) {
     if(_view < 100) return;
 
     room = {
+      id: 'huomao' + el.room_number,
       roomId: el.room_number,
       type: el.gameCname,
       title: el.channel,
@@ -150,6 +154,7 @@ function longzhuParse(datas, cb) {
   _.each(data.data.items, (el, index) => {
     if(!el.game[0].name) console.log(el)
     room = {
+      id: 'longzhu' + el.channel.id,
       roomId: el.channel.id,
       type: el.game[0].name,
       title: el.channel.status,
@@ -183,6 +188,7 @@ function huyaParse(datas, param, cb) {
     var _live = true;
   
     room = {
+      id: 'huya' + el.privateHost,
       roomId: el.privateHost,
       type: el.gameFullName,
       title: el.roomName,
@@ -217,6 +223,7 @@ function bilibiliParse(datas, param, cb) {
     var _live = true;
 
     room = {
+      id: 'bilibili' + el.roomid,
       roomId: el.roomid,
       type: el.areaName,
       title: el.title,
@@ -251,6 +258,7 @@ function afreecatvParse(datas, param, cb) {
     var _view = el.view_cnt;
     var _live = true ;
     room = {
+      id: 'afreecatv' + el.title_no,
       roomId: {
         nTitleNo: el.title_no,
         nStationNo: el.station_no,
@@ -287,6 +295,7 @@ function quanminParse(datas, param, cb) {
   	var _view = el.view;
 
     room = {
+      id: 'quanmin' + el.liveId,
       roomId: el.liveId,
       type: el.category_name,
       title: el.title,
@@ -320,6 +329,7 @@ function zhanqiParse(datas, param, cb) {
     var _live = true;
 
     room = {
+      id: 'zhanqi' + el.id,
       roomId: el.id,
       type: el.fatherGameName,
       title: el.title,
@@ -353,6 +363,7 @@ function pandaParse(datas, param, cb) {
     var _live = true;
 
     room = {
+      id: 'panda' + el.id,
       roomId: el.id,
       type: el.classification.cname,
       title: el.name,

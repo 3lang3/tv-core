@@ -120,7 +120,6 @@ function autoFetch() {
   let newPlatform = platformConfig.newPlatform;
   async.forever(next => {
     fn(() => setTimeout(() => {
-      console.log('finished!')
       next(null)
     }, 5 * 60 * 1000))
   }, err => {
@@ -154,7 +153,6 @@ router.get('/search', async (req, res, next) => {
   }
 
   if(type == 'keyword') {
-    console.log('enter search')
     var reg = new RegExp(word, 'i');
     query = await ScreenModal.find({$or : [{title :  reg},{anchor : reg}]}).sort({viewNumber: -1 }).limit(10)
   }
@@ -186,15 +184,13 @@ router.get('/getImg', async (req, res, next) => {
       await FetchImg(platform.imgUrl, platform.platform);
     }
   }
-  
-
   res.json({status: true, message: 'done!'})
 }) 
 
 
 let categoryFilter = () => {
   return new Promise(async (resolve, reject) => {
-    console.time();
+    console.time('get category time');
     let typeQuery = await ScreenModal.distinct('type');
     let platformQuery = await ScreenModal.distinct('platform');
     let allLiveList = await ScreenModal.find({live: true});
@@ -253,8 +249,7 @@ let categoryFilter = () => {
         }
       }
     ]).then(() => {
-      console.log('The filer database is done!')
-      console.timeEnd()
+      console.timeEnd('get category time')
       resolve(categoryArray)
     })
   })
