@@ -8,8 +8,9 @@ var app = require('../app');
 var debug = require('debug')('tv-core:server');
 var http = require('http');
 var https = require('https');
-var privateKey  = fs.readFileSync('/server.key', 'utf8');
-var certificate = fs.readFileSync('/server.pem', 'utf8');
+var fs = require('fs');
+var privateKey  = fs.readFileSync('./server.key', 'utf8');
+var certificate = fs.readFileSync('./server.pem', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
 
 /**
@@ -31,7 +32,7 @@ var server = https.createServer(credentials, app);
  */
 
 // server.listen(port);
-httpsServer.listen(port);
+server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
