@@ -14,7 +14,7 @@ mongoose.connect(`mongodb:${config.mongodbUri}${config.mongodbName}`);
 
 var apis = require('./routes/apis');
 var login = require('./routes/web');
-var chat = require('./routes/chat');
+// var chat = require('./routes/chat');
 
 var app = express();
 
@@ -38,7 +38,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', login);
-app.use('/chat', chat);
+// app.use('/chat', chat);
 app.use('/api', apis);
 
 // catch 404 and forward to error handler
