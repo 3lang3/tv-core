@@ -131,7 +131,7 @@ module.exports = {
         {
             platform: 'douyu',
             name: '斗鱼',
-            pageUrl: 'https://www.douyu.com/directory/all?isAjax=1',
+            pageUrl: 'https://www.douyu.com/gapi/rkc/directory/0_0/',
             firstPageUrl: 'https://www.douyu.com/directory/all',
             imgUrl: 'https://www.douyu.com/directory',
         },
