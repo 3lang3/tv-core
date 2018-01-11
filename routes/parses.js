@@ -4,33 +4,30 @@ var _ = require('lodash');
 // var Screen = new ScreenModal()
 
 function douyuParse(datas, cb) {
-  var $;
+  var data;
   try{
-    $ = cheerio.load(datas.body);
+    data = JSON.parse(datas.body);
   }catch(e){
-    return [];
+      return []; 
   }
 
-  var room, rooms = [];
-  $('li').each(function(index, el) {
-    var _view = $(el).find('span.dy-num').text();
-    if(_view.indexOf('万') > -1 ) _view = parseFloat(_view)*10000;
-    if(_view < 600) return;
-    var room = {
-      id: 'douyu' + $(el).data('rid'),
-      roomId: $(el).data('rid'),
-      type: $(el).find('span.tag').text().trim(),
-      title: $(el).find('h3').text().trim(),
-      viewNumber: parseFloat(_view),
-      view: $(el).find('span.dy-num').text(),
+ if(data.msg !== 'success') return [];
+  
+ _.each(data.data.rl, (el, index) => {
+    room = {
+      id: 'douyu' + el.uid,
+      roomId: el.uid,
+      type: param,
+      title: el.rn,
+      viewNumber: el.ol,
+      view: el.ol,
       platform: 'douyu',
       live: true,
-      anchor: $(el).find('span.dy-name').text(),
-      cover: $(el).find('img[data-original]').data('original'),
+      anchor: el.nn,
+      cover: el.rs1,
     }
-
-    rooms.push(room)
-  });
+    rooms.push(room);
+  })
 
   return rooms;
 }
