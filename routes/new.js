@@ -90,6 +90,8 @@ class Spider {
             _url = `${this.pageUrl}${url + 1}`;
         }else if(this.platform == 'bilibili') {
             _url = `${this.pageUrl}${url + 1}`;
+        }else if(this.platform == 'douyu') {
+            _url = `${this.pageUrl}${url + 1}`;
         }else if(this.platform == 'longzhu') {
             _url = `http://api.plu.cn/tga/streams?max-results=50&sort-by=views&filter=0&start-index=${url}`;
         }else {

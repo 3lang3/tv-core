@@ -1,5 +1,9 @@
-var http = require('http');
-var server = http.createServer();
+var http = require('https');
+var fs = require('fs');
+var privateKey  = fs.readFileSync('./server.key', 'utf8');
+var certificate = fs.readFileSync('./server.pem', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+var server = http.createServer(credentials);
 var express = require('express');
 var router = express.Router();
 var app = express();
@@ -7,7 +11,7 @@ var io = require('socket.io')(server);
 var config = require('../config');
 var superagent = require('superagent');
 
-var ipTrackerUrl = 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip=';
+var ipTrackerUrl = '//int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip=';
 
 //在线用户
 var onlineUsers = {};
@@ -16,7 +20,7 @@ var onlineCount = 0;
 
 let trackHandler = (ip) => {
 	return new Promise((resolve, reject) => {
-
+		https://staticlive.douyucdn.cn/common/share/play.swf?room_id=423895
 		superagent
 			.get(`${ipTrackerUrl}${ip}`)
 			.timeout(500)

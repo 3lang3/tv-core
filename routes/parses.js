@@ -12,12 +12,12 @@ function douyuParse(datas, cb) {
   }
 
  if(data.msg !== 'success') return [];
-  
+ var room, rooms = [];
  _.each(data.data.rl, (el, index) => {
     room = {
       id: 'douyu' + el.uid,
       roomId: el.uid,
-      type: param,
+      type: el.c2name,
       title: el.rn,
       viewNumber: el.ol,
       view: el.ol,
