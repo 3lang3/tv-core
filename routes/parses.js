@@ -15,8 +15,8 @@ function douyuParse(datas, cb) {
  var room, rooms = [];
  _.each(data.data.rl, (el, index) => {
     room = {
-      id: 'douyu' + el.uid,
-      roomId: el.uid,
+      id: 'douyu' + el.rid,
+      roomId: el.rid,
       type: el.c2name,
       title: el.rn,
       viewNumber: el.ol,
