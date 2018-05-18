@@ -9,9 +9,6 @@ var debug = require('debug')('tv-core:server');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
-var privateKey  = fs.readFileSync('./server.key', 'utf8');
-var certificate = fs.readFileSync('./server.pem', 'utf8');
-var credentials = {key: privateKey, cert: certificate};
 
 /**
  * Get port from environment and store in Express.
