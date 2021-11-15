@@ -28,7 +28,7 @@
     "passport-steam": "^1.0.8",
     "request": "^2.81.0",
     "serve-favicon": "~2.3.0",
-    "socket.io": "1.7.4",
+    "socket.io": "2.2.0",
     "steam": "^1.4.0",
     "superagent": "^3.5.2"
   },
