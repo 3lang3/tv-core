@@ -34,6 +34,6 @@
   },
   "devDependencies": {
     "cross-env": "^5.0.1",
-    "mongoose": "4.13.21"
+    "mongoose": "5.2.9"
   }
 }
