@@ -7,7 +7,7 @@
     "production": "cross-env NODE_ENV=production node ./bin/www"
   },
   "dependencies": {
-    "async": "^2.3.0",
+    "async": "^2.6.4",
     "body-parser": "~1.13.2",
     "cheerio": "^0.22.0",
     "compression": "^1.6.2",
