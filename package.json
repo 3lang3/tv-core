@@ -19,7 +19,7 @@
     "debug": "~2.2.0",
     "dota2": "^5.0.1",
     "ejs": "~2.3.3",
-    "express": "~4.13.1",
+    "express": "~4.15.0",
     "express-session": "^1.15.2",
     "lodash": "^4.17.4",
     "morgan": "~1.6.1",
@@ -27,7 +27,7 @@
     "passport-local": "^1.0.0",
     "passport-steam": "^1.0.8",
     "request": "^2.81.0",
-    "serve-favicon": "~2.3.0",
+    "serve-favicon": "~2.4.0",
     "socket.io": "1.7.4",
     "steam": "^1.4.0",
     "superagent": "^3.5.2"
